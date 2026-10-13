@@ -1,0 +1,11 @@
+{
+  "mode": "technical-slide",
+  "audience": "第一次阅读、具备基本编程经验的读者",
+  "central_question": "怎样把能写代码的Agent组织成可持续开发、验证和维护软件的流程？",
+  "reader_outcome": "解释内外两层循环，并能为工作区状态、检查门控、知识关系和重构写出可验证的约定。",
+  "visual_teaching_atoms": 35,
+  "formula_teaching_atoms": 0,
+  "vision": "yes",
+  "source_notes": "B站自动字幕+原视频课件和代码；课堂生成的仓库分析摘要按现场观察引用，未作为独立代码审计。",
+  "hardsub_detection_review": "检测器将课件正文识别为字幕；全分辨率复核屏幕面板无字幕覆盖；保留底部OCR输出以供核查，不作为课程字幕或数字来源。"
+}

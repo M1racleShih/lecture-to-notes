@@ -1,0 +1,53 @@
+{
+  "width": 1280,
+  "height": 410,
+  "frames": 60,
+  "source": "measured composite boundary; editor divider at x=915 verified on code and document frames",
+  "composite": true,
+  "panels": [
+    {
+      "name": "main",
+      "box": [
+        548,
+        0,
+        1280,
+        410
+      ],
+      "aspect": "16:9",
+      "aspect_error": 0.0043,
+      "coverage": 0.988
+    },
+    {
+      "name": "left",
+      "box": [
+        0,
+        0,
+        548,
+        410
+      ]
+    },
+    {
+      "name": "screen_left",
+      "box": [
+        548,
+        0,
+        915,
+        410
+      ]
+    },
+    {
+      "name": "screen_right",
+      "box": [
+        915,
+        0,
+        1280,
+        410
+      ]
+    }
+  ],
+  "consistency": 1.0,
+  "candidates": [],
+  "warnings": [],
+  "unmatched_frames": [],
+  "unmatched_count": 0
+}

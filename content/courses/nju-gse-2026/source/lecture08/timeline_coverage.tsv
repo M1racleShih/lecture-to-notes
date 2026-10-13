@@ -1,0 +1,26 @@
+start	end	section	content	status
+00:00	04:00	sec:prototype	实验中的宽度与深度搜索	ok
+04:00	08:00	sec:prototype	评审、知识材料与三层选择	ok
+08:00	12:00	sec:prototype / sec:inner	原型、假设与Agent自主能力	ok
+12:00	16:00	sec:inner	模型能力边界与最小实现	ok
+16:00	20:00	sec:inner	Bash接口、超时与工具回写	ok
+20:00	24:00	sec:inner / sec:outer	自主行为与Ralph循环	ok
+24:00	28:00	sec:outer	上下文影响与状态外部化	ok
+28:00	32:00	sec:outer	状态迁移与分支并行	ok
+32:00	36:00	sec:outer	跨会话、提示词与完成标记	ok
+36:00	40:00	sec:outer	名片核对、随机性与模型更新	ok
+40:00	44:00	sec:ci	小步检查与开发者自信	ok
+44:00	48:00	sec:ci	CI、两种CD及事件	ok
+48:00	52:00	sec:ci	Hook、Lint与远端合并约束	ok
+52:00	56:00	sec:constraints	文档膨胀和代码同步	ok
+56:00	60:00	sec:constraints	自动预算、反馈与维护	ok
+60:00	64:00	sec:constraints	Harness知识、应用观察和架构	ok
+64:00	68:00	sec:parallel	编译器验证子集和任务仪表盘	ok
+68:00	72:00	sec:bilingual	双语关系、三件套和章节哈希	ok
+72:00	76:00	sec:bilingual	结构签名、最小补丁和按需读取	ok
+76:00	80:00	sec:bilingual / sec:knowledge	术语误报边界与开发历史	ok
+80:00	84:00	sec:knowledge	配对演进、指令预算和决策状态	ok
+84:00	88:00	sec:knowledge	Skills、接口一致性和门控	ok
+88:00	92:00	sec:refactor	重构、Friendster和需求假设	ok
+92:00	96:00	sec:refactor	Token资源、培养周期与教育判断	ok
+96:00	97:10	sec:synthesis	开源学习与本讲综合	ok

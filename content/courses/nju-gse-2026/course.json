@@ -484,6 +484,68 @@
           "figures/fig_38_computation_correctness.jpg": "0e63caaf79d075d12f3233552caa3f80b71b412add409c3f08d90abe5f8892c9"
         }
       }
+    },
+    {
+      "file": "nju_gse_2026_08_agent_native_development_zh.pdf",
+      "title": "第 8 讲：Agent-native 开发",
+      "order": 8,
+      "expected_pages": 42,
+      "duration_minutes": 97,
+      "instructor": "蒋炎岩",
+      "source_url": "https://www.bilibili.com/video/BV11LWw6VEHW/",
+      "source_label": "B站",
+      "meta": "蒋炎岩 · 97min · 42页",
+      "web_source": {
+        "tex": "source/lecture08/notes.tex",
+        "sha256": "63f8afaa74f8240cb23789fa158f9e8e459ba8111910ed7ba43db0d22508ed32",
+        "pdf_sha256": "1b7fb982b3da628a9d79b127c87df7fff153d43faac43dce4acfd79ef6bb97b6",
+        "expected": {
+          "chapters": 11,
+          "figures": 35,
+          "images": 35,
+          "callouts": 20,
+          "tables": 1,
+          "math": 0,
+          "time_tokens": 70
+        },
+        "resources": {
+          "figures/fig_01_intent_spec.png": "d603b58c73fd362c1f6d23f185ceb39a6513b7358fa3663622782904b5c37306",
+          "figures/fig_02_design_space.png": "6e673587eddb8f03ed3717597ecd3e17f6540ae338880fe7f4ad4c0fa7ce0083",
+          "figures/fig_03_prototype.png": "9c644655e26c77012cb8f7d5f42dc43b82711b7690d31ae75790bf7b8b4bdb4a",
+          "figures/fig_04_agent_limits.png": "3f4ea345833bea22a30172ecf7f44ede453357ec0856580ea73d3047138fd77b",
+          "figures/fig_05_bash_schema.png": "80e87fe532692a58b27b4e5a4218d08a3c750b015463fa83fff2c84eb8beaa55",
+          "figures/fig_06_timeout.png": "f14abfb97ebbf26300fc96ef4f95df4007bc6f3f1a8329931f60aaca4ed24cb8",
+          "figures/fig_07_tool_loop.png": "244ce7e32dbc2cc287be356d00f8fc401460123f01d9588337bcf6d4a3818c3c",
+          "figures/fig_08_ralph.png": "fae4a08d27bc8b88fd830811a104cca863f680743d61c2bcc27870ecf50a383f",
+          "figures/fig_09_workspace.png": "71891d058bc6ddd0dba2998ad75adc3490d06469a082578958d26662e8de4e1d",
+          "figures/fig_10_parallel_board.png": "46c6b346c3916f7e6c6794d21ea403ca88746883e0cb7f362dfead845631e4df",
+          "figures/fig_11_oneshot_card.png": "b6ca2ea8c9efc3cefd2db25a402216f26cd7451d86966e2eb6b80d9a373ecc65",
+          "figures/fig_12_loop_card.png": "d333fd4b9a4d36699cf47d65319edbbfacfaf77a56fb1b284a56febcc90d382a",
+          "figures/fig_13_transition_checks.png": "6c03d04a687d8d581779a629d9a3ef0b5a86033bd1edb38c32ca76fa5e821094",
+          "figures/fig_14_ci_cd.png": "c87faddd8e8a99820178d1b4a40d56a15f5812c6d23d3265eb4c55116605f4e1",
+          "figures/fig_15_hooks.png": "f37f541ed152e79b43016257a45704edd7d6ac4b9560a4a3db807e6dc8771fbc",
+          "figures/fig_16_release_rules.png": "06c9a64a77602c893aee63e13a5ee4aa754907b373238f62cff857b0843034ad",
+          "figures/fig_17_constraint_table.png": "2a271c674fe5af75e4d17729edd84d1bcfe60868ca3aa7c364b669bced92513c",
+          "figures/fig_18_harness_environment.png": "bf253486d3e49fad6b9eb91ec5df3c9100d58cdc542f9629f95fbc0385c40f24",
+          "figures/fig_19_architecture_rules.png": "f27f6319bbae0d3e9a48c37d3b3eb62d0da3cfd42a4becebdc527e390dba9e55",
+          "figures/fig_20_compiler_parallel.png": "58b7264664b9e6c1310e94033a3dbac44e8830c5fb8344546dca878121884bb1",
+          "figures/fig_21_document_pairs.png": "3f3d0986a29a0fe7243fcac8a422ed89a4f91a8be4414ecef907cf90e02151c5",
+          "figures/fig_22_doc_triplet.png": "29fc0a0cde32aa224f351894484220db3cdde11308679a1586c4a3f99c41dd43",
+          "figures/fig_23_pair_hash.png": "176bdbbc9cbab5bb76a13b725e2b08d9a35b5e9daeff206cb012fe1d10df8c21",
+          "figures/fig_24_pair_checks.png": "f6bac3f8bb338115c35d8ca5495e20dfd9243f6ee3aedfc283bd0cc796ff7ee7",
+          "figures/fig_25_style.png": "e57d280a8c81185470199b8ea17eca470a60bc9ba4a6d5cd2eb4fd46d42f8aa7",
+          "figures/fig_26_terminology.png": "e192aaa3c882fe989d868aab7b2eb9df73f19f7b401bc12d1b70b67e637f5ca3",
+          "figures/fig_27_history_early.png": "32fc7705edbc4138f2ebbdcd3a470fe0b8f8e3377298e16917c298ca5ed4c1ec",
+          "figures/fig_28_history_late.png": "41fe1d1522f8bebca11490dc82b2cac3f412ee28819ef47567f20038b033ea48",
+          "figures/fig_29_agent_notes.png": "52c7428d24e2c6fe93a112a0c8571bc6bcb0dc7df82a4726ae12f09adfb7212c",
+          "figures/fig_30_skills.png": "0cfcce8913f9e5c1de48f0c175468fc393597c1850231894cad2514e638a439a",
+          "figures/fig_31_mechanical_checks.png": "b68da112686996948c09b949b9f27f75619f23a4e199e5378deeddd9cf418a86",
+          "figures/fig_32_refactor.png": "e94cf824d070b6c1550f69ccde922b9d9aa9a0ffc064045f8212b485563b84d4",
+          "figures/fig_33_friendster.png": "aa01186d5a83eb4c5af5b8db87a35ee78f3d523dd9174b517515f7a81ec32f8f",
+          "figures/fig_34_business_cases.png": "fb1372eefd5e806611cf35dbd2bf064927441aaff28b16b02df3b976ade6a5a3",
+          "figures/fig_35_learning_access.png": "3815ae8d79512534742539e32aaa31f5bcbb3e0caebf0e4a5ee5e489c290dd59"
+        }
+      }
     }
   ]
 }
