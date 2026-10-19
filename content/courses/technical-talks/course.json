@@ -21,6 +21,53 @@
       "source_url": "https://www.bilibili.com/video/BV1oTwkzvEFu",
       "source_label": "B站",
       "meta": "蒋炎岩 · 26min · 10页"
+    },
+    {
+      "legacy_id": "anthropocene-investigator",
+      "file": "jascha_anthropocene_investigator.pdf",
+      "title": "人类世初末的青年研究者指南（Advice for a Young Investigator in the Anthropocene）",
+      "order": 2,
+      "expected_pages": 30,
+      "duration_minutes": 45,
+      "instructor": "Jascha Sohl-Dickstein (Anthropic)",
+      "source_url": "https://x.com/ecommartinez/status/2111755238327628202/video/1",
+      "source_label": "X",
+      "meta": "Jascha Sohl-Dickstein · 45min · 30页",
+      "web_source": {
+        "tex": "source/jascha_anthropocene_investigator/notes.tex",
+        "sha256": "4bfecdfbff2c76d85cf6b7ccaaea1b66557b5f6ee0a766864ebb9c53ea9293ef",
+        "pdf_sha256": "635c878d091c7120d9b3d2f03695af5e73acb252ebe947e997ef12bdcd3224dc",
+        "expected": {
+          "chapters": 7,
+          "figures": 19,
+          "images": 19,
+          "callouts": 5,
+          "tables": 3,
+          "math": 57,
+          "time_tokens": 44
+        },
+        "resources": {
+          "figures/fig_01_title_gdp_curve.jpg": "715e8d5ff1b6d667b54f5e4cf0fb719328c0054c8df79713f1979240591fab0e",
+          "figures/fig_02_core_thesis.jpg": "03b9c7e7d48ddc35d6eca1bb7bbc628e817a5bf619ac687a271ed0f9ad68a975",
+          "figures/fig_03_anthropocene_strata.jpg": "90dd016d06c406890efb640b6030583595b14d0b55a05677503f29acac7cb2fb",
+          "figures/fig_04_training_compute.jpg": "357e5aac7ab917c3353a69f1e2296ccac0fdbe4b349923732967627a96580c92",
+          "figures/fig_05_metr_task_horizon.jpg": "6d2a41a8077334a454b0a4943264c8ca6b31bf72c54c72738238f2e2826db8b3",
+          "figures/fig_06_erdos_problems.jpg": "baf8a8f0f4b3c74288408cd7c59d1565179a12564771da2d924363b959526549",
+          "figures/fig_07_overton_window.jpg": "ff9ca91cc913be73310cf3dd06367222785661b6866af0d55e32e3fade0b6e8a",
+          "figures/fig_08_agi_leader_quotes.jpg": "e8d004c81bbf69ea3ddf97b0f265d22b1fea12be8b762dcc62bdfecede70f958",
+          "figures/fig_09_media_shift.jpg": "d3655018cc7e5c0f3bc905e77f8e2d784583f8ee0915f20d2f77c606fef68322",
+          "figures/fig_10_sf_lab_timelines.jpg": "f62a8876fe4e1e57ffc9489caddaa27a8cf89ea9cf1c1f56b586f11e538e626b",
+          "figures/fig_11_project_timescale_bitter_lesson.jpg": "8a05289f50fbfdd0a6a1b5f0406a5334e8e9ccff34819bee9c03baec2cbd2a59",
+          "figures/fig_12_horseless_carriage_tools.jpg": "658921646bec44f95dedb4750670a970e2d8f31a0c30dcd0851c27c6949332c0",
+          "figures/fig_13_career_risk_reward.jpg": "aed8a91a426c028e580dda277881feee06a961c0de0bc60aa6d761f6c8acdcd0",
+          "figures/fig_14_trajectory_shift_dyson.jpg": "dc070ba1b07d23709744dbd5faa1d14014b75674e92d60f4b4bb9428d1e15ff2",
+          "figures/fig_15_epoch_scaling_2030.jpg": "4c79a004b1278151e330d4580beecaf25c40109982606b4e2db52b89c34df3ce",
+          "figures/fig_16_historical_interventions.jpg": "302b56fd0692adb63822b8304ac146ab06f1e0f69ce6d8a0169c2ca9a749c642",
+          "figures/fig_17_tech_tree_leverage.jpg": "00ef7531324951b33b51e44a23b5cb12edc8d043f39610c2ec354b7dbd04a7cd",
+          "figures/fig_18_intellectual_returns_curve.jpg": "8adabbbdfbf2191f4611a955786546c85b2b46d3c64832e5225716b1b7f565a8",
+          "figures/fig_19_project_areas.jpg": "710eb196ad6894137e494ffd0924cca2e36c8d509240e50b6178bd98016b9939"
+        }
+      }
     }
   ]
 }

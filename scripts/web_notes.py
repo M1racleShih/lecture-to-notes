@@ -145,8 +145,12 @@ def pandoc(args: list[str], text: str) -> str:
                 text=True, capture_output=True, check=True, timeout=90, cwd=tmp)
         except (OSError, subprocess.SubprocessError) as exc:
             raise ConversionError("Pandoc conversion failed or unavailable") from exc
-    if run.stderr.strip():
-        raise ConversionError("Pandoc reported: " + run.stderr.strip()[:600])
+    stderr = "\n".join(
+        line for line in run.stderr.splitlines()
+        if "Deprecated: --mathml." not in line
+    ).strip()
+    if stderr:
+        raise ConversionError("Pandoc reported: " + stderr[:600])
     return run.stdout
 
 
