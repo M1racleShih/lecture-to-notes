@@ -273,7 +273,7 @@ figs 25; gold ~8035 CJK / 27 figs / 31 pages.)
 ### Forbidden shortcuts
 
 - Stopping after a “skeleton PDF” that only titles topics and pastes slides.
-- Writing captions from section titles without reading the full-resolution frame.
+- Writing captions from section titles without reading the candidate frame (as a `1280px` review JPEG).
 - Claiming high density without measuring CJK character count against the gate above.
 - Omitting `figure_manifest.tsv` / `figure_verification.txt` “because figures look fine”.
 - Merging unrelated teaching points to reduce page count.
@@ -655,7 +655,7 @@ Read `layout.json` before selecting figures:
   (fewer than 20 sampled frames or distinct pictures, a remaining panel larger than `main`,
   frames of another size) means the same: confirm the boxes on the preview before any crop.
 
-Decide per figure after reading the full-resolution frame:
+Decide per figure after reading the candidate frame (as a `1280px` review JPEG):
 
 | What the frame teaches | Figure files | `panel` in the manifest |
 |---|---|---|
@@ -698,15 +698,15 @@ composite) and select the best ones manually via contact sheet review.
 #### Stage 3: Contact sheet review
 
 ```bash
-# Generate contact sheets per chapter (keeps montage size manageable)
+# Generate contact sheets as compressed JPEG (300–400 KB each instead of 4–6 MB PNG)
 # For chapters: montage per chapter directory
-magick montage frames/ch<N>_*.png -tile 5x -geometry 384x216+2+2 contact_ch<N>.png
+magick montage frames/ch<N>_*.png -tile 5x -geometry 384x216+2+2 -quality 82 contact_ch<N>.jpg
 
 # For unchaptered videos with many frames (>100):
 # Split into batches of 50 to avoid montage failures
 for i in $(seq 1 50 $(ls frames/*.png | wc -l)); do
   ls frames/*.png | tail -n +$i | head -50 | xargs magick montage \
-    -tile 5x -geometry 384x216+2+2 contact_batch_${i}.png
+    -tile 5x -geometry 384x216+2+2 -quality 82 contact_batch_${i}.jpg
 done
 ```
 
@@ -742,10 +742,20 @@ For each candidate figure:
            print(f"{entry.start}s: {entry.text}")
    ```
 
-3. **Read the frame at full resolution**: Use the Read tool to view the actual frame image.
-   Identify the ACTUAL text/diagram/code shown on screen — not what you think should be there.
-   With `"vision": "no"`, substitute the OCR text of that frame (Stage 2 fallback) and
-   never describe visual elements the OCR did not report.
+3. **Read the candidate frame without bloating session context**:
+   - **Keep full-resolution PNGs for `frame_filter.py crop` only** (so `figures/fig_XX.jpg` retains full print resolution and passes `verify_notes.py` pixel-size checks).
+   - **Never feed 20–30 raw 1080p PNGs (`~1.3–2.0 MB` each, >40 MB total) directly into the `Read` tool** — agent sessions resend the entire conversation history on every turn, and a 40+ MB base64 image history will cause subsequent requests (and `/compact`) to hang or time out.
+   - Instead, before calling `Read` on candidate frames, generate downsampled review JPEGs (`1280px` width is plenty to read slide text, formulas, and code while shrinking each image to `~80–150 KB`):
+     ```bash
+     mkdir -p review
+     for f in frames/ch1_010.png frames/ch1_024.png; do
+       magick "$f" -resize 1280x -quality 82 "review/$(basename "${f%.png}.jpg")"
+     done
+     ```
+   - Read **at most 8–10 downsampled `review/*.jpg` images per turn** (keeping per-request image payload within a few MB), identify the ACTUAL text/diagram/code shown on screen, and **immediately write the verified conclusions to disk** (`figure_manifest.tsv` / `figure_notes.md`) so your working state lives on disk rather than in image history.
+   - **If a session ever becomes sluggish from accumulated images, do NOT run `/compact`** (`/compact` must upload the entire multimodal context first and will hang even longer). Instead, write a concise `handoff.md` pointing to the saved files on disk (`audio.srt`, `layout.json`, `bands.json`, `figure_manifest.tsv`, `figure_verification.txt`, `lecture_profile.json`, `teaching_atoms.tsv`, `numerical_claims.tsv`) and continue in a fresh session.
+   - With `"vision": "no"`, substitute the OCR text of that frame (Stage 2 fallback) and
+     never describe visual elements the OCR did not report.
 
 4. **Three-way match check**: Verify that ALL THREE align:
    - ✅ Frame visual content (what the slide/screen actually shows)
@@ -765,7 +775,8 @@ For each candidate figure:
 
 | Failure | Example | Fix |
 |---------|---------|-----|
-| Frame shows slide A, caption describes slide B | Frame shows "Language" section but caption says "Transformer" | Read frame at full res before writing caption |
+| Frame shows slide A, caption describes slide B | Frame shows "Language" section but caption says "Transformer" | Read `1280px` review JPEG of frame before writing caption |
+| Session hangs / times out after reading 20–30 frames | 40+ MB of raw 1080p PNGs accumulated in context; `/compact` hangs | Resize to `1280x` JPEG (`review/*.jpg`) before `Read`, batch ≤8–10 images/turn, persist to disk immediately, use `handoff.md` instead of `/compact` |
 | Timestamp off by 1-2 minutes | @07:00 claimed but actual content is at @09:00 | Cross-check with subtitle timestamps |
 | Caption describes the section topic, not the frame | "Scaling Law 幂律关系" but frame shows a chess board | Write caption from frame content, not section title |
 | Frame is transitional (between slides) | Half old slide, half new slide | Pick a frame 15s earlier or later |
