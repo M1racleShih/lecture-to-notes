@@ -7,7 +7,13 @@ from pathlib import Path
 
 from scripts.web_notes import ConversionError, build_web_notes, convert, digest, prepare_tex, safe_file, video_time_url
 
-READY = all(shutil.which(x) for x in ('pandoc', 'identify'))
+import importlib.util
+
+READY = (
+    all(shutil.which(x) for x in ('pandoc', 'identify'))
+    and importlib.util.find_spec('PIL') is not None
+    and importlib.util.find_spec('bs4') is not None
+)
 
 class WebNotesTests(unittest.TestCase):
     def test_video_links_preserve_video_and_replace_stale_start_times(self):

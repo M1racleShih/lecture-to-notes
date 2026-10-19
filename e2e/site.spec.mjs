@@ -58,12 +58,12 @@ test('opens a catalog-whitelisted PDF in the dedicated reader', async ({page, re
   });
 });
 
-test('explains fork permissions and starts the contribution flow', async ({page}, testInfo) => {
+test('explains fork workflow and starts the contribution flow', async ({page}, testInfo) => {
   await page.goto('/contribute.html');
   const fork = page.getByRole('link', {name: '第一步：Fork 仓库'});
   await expect(fork).toHaveAttribute('href', 'https://github.com/ysyecust/lecture-to-notes/fork');
-  await expect(page.getByText('普通贡献者不能直接修改这个仓库', {exact: false})).toBeVisible();
-  await expect(page.getByText('PR 只提交变更和说明，不会获得原仓库写入权限。')).toBeVisible();
+  await expect(page.getByText('通过 GitHub Fork 与 Pull Request 提交，维护者审核合并后发布。')).toBeVisible();
+  await expect(page.getByRole('heading', {name: '按这五步提交'})).toBeVisible();
   await page.screenshot({
     path: `${REVIEW_DIR}/${testInfo.project.name}-contribute.png`,
     fullPage: true,

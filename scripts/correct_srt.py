@@ -27,7 +27,10 @@ from pathlib import Path
 
 def parse_srt(content: str) -> list[dict]:
     """粗略解析 SRT 为 {index, time, text} 列表。"""
-    blocks = re.split(r"\n\n+", content.strip())
+    normalized = content.replace("\r\n", "\n").strip()
+    if not normalized:
+        return []
+    blocks = re.split(r"\n\n+", normalized)
     entries = []
     for block in blocks:
         lines = block.strip().split("\n")
@@ -82,6 +85,8 @@ def main():
 
     content = inp.read_text(encoding="utf-8")
     entries = parse_srt(content)
+    if not entries:
+        p.error("no subtitle entries found in input SRT; output was not written")
 
     total = 0
     for e in entries:

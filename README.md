@@ -2,38 +2,41 @@
 
 # lecture-to-notes
 
-**把 YouTube / Bilibili / X(Twitter) 的讲座视频，变成可编译的中文 LaTeX 讲义 PDF。**
-读者优先的成文，每张配图带原视频时间脚注，每个数字都能追溯到字幕或画面。
-已发布的讲义还有一份桌面和手机都能读的[网页正文](#课程资料库与在线阅读)。
+**把 YouTube / Bilibili / X(Twitter) 的讲座视频，变成可编译的中文 LaTeX 讲义 PDF 与在线网页。**
+按读者问题重构章节，每张配图带原视频时间脚注，每个数值可追溯到字幕或画面。
 
 [![Release](https://img.shields.io/github/v/release/ysyecust/lecture-to-notes?sort=semver)](https://github.com/ysyecust/lecture-to-notes/releases)
-[![Tests](https://github.com/ysyecust/lecture-to-notes/actions/workflows/tests.yml/badge.svg)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/tests.yml)
-[![Course library](https://github.com/ysyecust/lecture-to-notes/actions/workflows/pages.yml/badge.svg)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/pages.yml)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white)](#依赖)
+[![Tests](https://img.shields.io/github/actions/workflow/status/ysyecust/lecture-to-notes/tests.yml?label=tests)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/tests.yml)
+[![Course library](https://img.shields.io/github/actions/workflow/status/ysyecust/lecture-to-notes/pages.yml?label=course%20library)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/pages.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white)](#依赖安装)
 [![License GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 
 [**在线课程库 →**](https://blog.simona.plus/lecture-to-notes/) · [English](README.en.md)
 
-<img src="docs/assets/readme/showcase.webp" alt="四页成品：Stanford CS336 Lecture 3 封面与正文、HBM 科普讲义正文" width="100%">
+<img src="docs/assets/readme/showcase.webp" alt="Stanford CS336 Lecture 3 封面与正文、HBM 科普讲义正文" width="100%">
 
-<sub>左：Stanford CS336 Lecture 3《现代大语言模型架构与超参数》封面与第 6 页；右：B 站科普《HBM 高带宽内存的原理与制造》第 3、11 页。全部由本工具生成。</sub>
+<sub>左：Stanford CS336 Lecture 3《现代大语言模型架构与超参数》封面与第 6 页；右：B 站《HBM 高带宽内存的原理与制造》第 3、11 页。</sub>
 
 </div>
 
 ## 它做什么
 
-给一个视频链接，产出一套完整的讲义：`notes.tex`（从 `\documentclass` 到 `\end{document}`）、编译好的 `notes.pdf`、裁好的配图、最终字幕轨，以及一组能证明内容可信的中间产物（配图清单、数值主张核对表、交付门禁报告）。仓库同时是一个 [Codex / Claude Code / DeepSeek Harness skill](#快速开始)、一个 [课程资料库站点](#课程资料库与在线阅读) 和一个 [论文解读工具](skills/paper-to-html/SKILL.md)。
+输入一个 YouTube、Bilibili（含分 P）或 X/Twitter（`https://x.com/<user>/status/<id>[/video/<n>]`）视频链接，自动产出一套完整的中文讲义：`notes.tex`、编译好的 `notes.pdf`、裁剪好的配图、修正后的字幕轨，以及配图清单、数值核对表与交付门禁报告。
+
+仓库同时包含：
+- **Agent Skill**：适用于 Claude Code / Codex / DeepSeek Harness 的 [`lecture-to-notes`](skills/lecture-to-notes/SKILL.md) 与论文解读 [`paper-to-html`](skills/paper-to-html/SKILL.md)
+- **在线课程库**：[blog.simona.plus/lecture-to-notes](https://blog.simona.plus/lecture-to-notes/)，支持网页正文与原版 PDF 双模式阅读
 
 ```mermaid
 flowchart LR
     A["视频 URL<br/>YouTube · Bilibili · X"] --> B["video_source.py<br/>平台识别 · 元数据"]
-    B --> C{"字幕来源"}
-    C -->|CC / 自动字幕| D["audio.srt"]
-    C -->|烧录字幕| E["ocr_hardsubs.py<br/>OCR 字幕带"] --> D
-    C -->|都没有| F["本地 ASR<br/>X ASR → Whisper"] --> D
-    B --> G["yt-dlp<br/>视频 + 封面"]
-    G --> H["ffmpeg 密集帧<br/>frame_filter.py 裁叠加层与拼接分栏 · 打分"]
-    D --> I["读者优先写作<br/>notes.tex"]
+    B --> C{"字幕五级回退"}
+    C -->|CC / 自动字幕| D["clean_subs.py / check_srt_health.py"] --> S["correct_srt.py<br/>audio.srt"]
+    C -->|烧录字幕| E["ocr_hardsubs.py<br/>OCR 字幕带 + 纠错词典"] --> S
+    C -->|本地转写| F["transcribe_x_asr.py<br/>transcribe_whisper.py"] --> S
+    B --> G["yt-dlp + ffmpeg<br/>视频 · 封面 · 密集抽帧"]
+    G --> H["frame_filter.py<br/>裁字幕带/导航条 · 切分课件栏 · 帧打分"]
+    S --> I["读者优先写作<br/>notes.tex"]
     H --> I
     I --> J["xelatex ×2"]
     J --> K{"verify_notes.py<br/>extract_claims.py"}
@@ -41,226 +44,92 @@ flowchart LR
     K -->|FAIL| I
 ```
 
-## 成品长什么样
+- **字幕五级回退**：人工 CC → 平台自动字幕（YouTube 用 `clean_subs.py` 去重；X/Twitter 经 `check_srt_health.py` 结构检查并在 10%、50%、90% 三处抽样核对）→ 烧录字幕 OCR（`ocr_hardsubs.py`）→ 本地 ASR（中英混合优先 `transcribe_x_asr.py`，其余按平台自动选 `mlx-whisper` / `faster-whisper` / `openai-whisper`）→ 词典与多模态修正（`correct_srt.py`、`llm_correct_srt.py`）。
+- **画面裁剪与三方校验**：`frame_filter.py` 自动测量并裁掉静态导航条和字幕带；遇到“讲者摄像头 + 课件”拼接画面时，只保留课件分栏，避免课件字迹缩成半页宽；每张配图入文前由 `verify_figures.py` 核对时间戳、字幕与画面一致。
+
+## 成品特点
 
 <img src="docs/assets/readme/features.webp" alt="讲义局部：全帧配图与时间脚注、公式与符号表、判断框" width="100%">
 
-- **重构教学流，不照搬字幕顺序**：按读者问题组织 `\section` / `\subsection`，每章以「本章小结」收尾，末尾有「总结与延伸」。
-- **每张配图都能回看**：配图下方脚注给出原视频的画面时间区间（如 `00:08:00–00:08:15`），配图与脚注保证在同一页。
-- **公式有符号表，数字有出处**：display math 后紧跟符号解释；讲座里出现的每个数值都记入 `numerical_claims.tsv` 并核对。
-- **三种判断框**：核心概念 / 背景与权衡 / 常见误区，只在确实需要从正文里分离时使用。
+- **读者优先写作**：遵循 [`references/reader-first-writing.md`](skills/lecture-to-notes/references/reader-first-writing.md) 规范，按读者问题组织章节，先讲含义再给术语，不照搬口语流水账。
+- **配图时间溯源**：每张图下方附原视频时间区间脚注（如 `00:08:00–00:08:15`），由 `verify_notes.py` 强制保证图与脚注同页。
+- **公式有符号表，数字有出处**：独立公式后紧跟符号说明；讲座中出现的带单位数值由 `extract_claims.py` 记入 `numerical_claims.tsv` 逐条核对。
+- **克制的判断框**：提供「核心概念 / 背景与权衡 / 常见误区」三类提示框，仅在需要从正文独立突出时使用。
 
 ## 快速开始
 
-### 安装 Skill（DeepSeek Harness / Codex / Claude Code）
+### 1. 安装 Skill
 
 ```bash
-scripts/install_skill.sh            # → ~/.agents/skills（DeepSeek Harness 与 Codex agents 读取此目录）
+scripts/install_skill.sh            # → ~/.agents/skills（DeepSeek Harness 与 Codex 读取此目录）
 scripts/install_skill.sh --claude   # → ~/.claude/skills
 scripts/install_skill.sh --codex    # → ~/.codex/skills
-scripts/install_skill.sh --all      # 三处都装
+scripts/install_skill.sh --all      # 以上三处同时安装
 ```
 
-脚本把 `SKILL.md`、`references/`、`agents/`、LaTeX 模板和 `scripts/` 下全部辅助脚本复制到
-`<root>/lecture-to-notes/assets/`，并写入 `assets/INSTALLED_FROM` 记录来源 commit；重复运行会整体替换旧副本。
-SKILL.md 的第 0 步会逐个检查这些辅助脚本，缺任何一个就停止，不会退回到别的 skill。
-如果同一目录下还留着旧的 `source-command-*-render-pdf` 之类命令式 skill，先移走，否则 agent 可能加载错的那个。
+安装后在 Claude Code / Codex 中输入 `/lecture-to-notes <URL>`，或直接发送 YouTube / Bilibili / X 视频链接即可触发。
 
-然后在 Claude Code 中使用 `/lecture-to-notes <URL>` 触发（或直接贴一个 B 站 / YouTube / X(Twitter) 链接，skill 会被自动匹配）。
+### 2. 运行产物
 
-### 一次运行会得到什么
-
-| 文件 | 内容 |
+| 文件 | 说明 |
 |---|---|
-| `notes.tex` / `notes.pdf` | 完整讲义源码与两遍 `xelatex` 编译结果 |
-| `figures/` + `figure_manifest.tsv` + `figure_verification.txt` | 配图、每图的帧与时间区间、三方校验输出 |
-| `audio.srt`（及 `audio_corrected.srt`、`hardsub_ocr.srt`） | 最终字幕轨与其来源 |
-| `lecture_profile.json` · `teaching_atoms.tsv` · `numerical_claims.tsv` | 讲座类型与读者目标、教学原子覆盖表、数值主张核对表 |
-| `bands.json` · `layout.json` · `frame_scores.json` | 叠加层几何、摄像头与课件拼接画面的分栏位置、候选帧打分（无视觉模型时必需） |
-| `verify_notes.txt` | 交付门禁报告，末行 `OVERALL PASS` |
-
-## 特性
-
-| 能力 | 做法 | 脚本 |
-|---|---|---|
-| 多平台 | 从 URL 识别 YouTube、Bilibili（含分 P）和 X/Twitter，探测元数据 | `video_source.py` |
-| 字幕五级回退 | CC → 自动字幕（YouTube 去重，通常去掉 50% 重复行）→ 烧录字幕 OCR → 本地 ASR → 纯视觉 | `clean_subs.py` `check_srt_health.py` `ocr_hardsubs.py` `transcribe_x_asr.py` `transcribe_whisper.py` |
-| 转写有预算 | Whisper 后端按平台自动选（Apple silicon 用 mlx-whisper），10 分钟无一个 segment 就退出换后端，不再盲等 | `transcribe_whisper.py` |
-| 用画面纠正听写 | 对齐 OCR 字幕与 ASR 轨，自动生成 `刻石→刻蚀`、`光眼膜→光掩膜` 这类纠错词典 | `ocr_hardsubs.py glossary` → `correct_srt.py` |
-| 密集帧 + 三方验证 | 每 15 秒采样 + contact sheet 审查；每张配图写入前核对「帧画面 × 字幕 × 描述」 | `verify_figures.py` |
-| 叠加层与讲者帧 | 测出导航条、字幕带并只裁掉它们；给帧打分，模型看不到图时也能拒绝讲者出镜帧 | `frame_filter.py` |
-| 摄像头与课件拼接画面 | 测出课件区和摄像头区的位置，每张图只保留讲课内容所在的一栏，课件文字不再被挤到半页宽；未切分的宽图过不了交付检查 | `frame_filter.py layout` · `verify_notes.py` |
-| 数值可追溯 | 从字幕和 OCR 轨提取每个带单位的数字，逐条核对讲义 | `extract_claims.py` |
-| 一次性交付门禁 | 密度、必需产物、编译日志、配图文件、脚注同页，一条命令 | `verify_notes.py` |
-| 读者优先写作 | 独立的写作规范：先讲含义再给术语、段落一个任务、限制先讲价值 | [`references/reader-first-writing.md`](skills/lecture-to-notes/references/reader-first-writing.md) |
-| 课程化归档 | 课程书脊、讲次刻度、全文检索、独立阅读页；外部只能通过 PDF-only PR 投稿 | `site_catalog.py` `build_site.py` `pdf_inspector.py` |
-| 双格式发布 | 同一份 `notes.tex` 除了 PDF 再转一份网页正文：源文件、PDF 和每张图的哈希固定在课程 manifest 里，章节 / 图 / 公式 / 时间区间逐项计数核对，任一项对不上就只发 PDF | `web_notes.py` |
-
-## 字幕获取：五级回退
-
-```mermaid
-flowchart TD
-    V["视频"] --> Q1{"平台 CC 字幕?"}
-    Q1 -->|有| OK["audio.srt"]
-    Q1 -->|无| Q2{"自动字幕?"}
-    Q2 -->|YouTube| A2["clean_subs.py 去重"] --> OK
-    Q2 -->|X/Twitter| A3["check_srt_health.py<br/>+ 10% / 50% / 90% 语义抽样"] --> OK
-    Q2 -->|无| Q3{"烧录字幕?<br/>ocr_hardsubs.py detect"}
-    Q3 -->|有| A4["ocr_hardsubs.py extract<br/>≈ 2 s / 视频分钟"] --> OK
-    Q3 -->|无 / 不完整| Q4{"中英文讲座?"}
-    Q4 -->|是| A5["transcribe_x_asr.py<br/>sherpa-onnx X ASR"] --> GL
-    Q4 -->|否 / 失败| A6["transcribe_whisper.py<br/>mlx → faster → openai<br/>10 分钟无进度即换后端"] --> GL
-    GL["ocr_hardsubs.py glossary<br/>→ correct_srt.py 词典修正"] --> OK
-```
-
-**SRT 修正两阶段**
-
-- **阶段 1 — 词典级**（`correct_srt.py`）：用 `wrong → right` pair 批量替换。词典可以来自 `whisper_prompts/glossary_<course>.json`，也可以由 `ocr_hardsubs.py glossary` 从烧录字幕自动生成。毫秒完成。
-- **阶段 2 — 段级语义**（`llm_correct_srt.py`）：按 ~90 秒切段，每段抽一个中间帧，调 `claude -p` 做多模态校准。能修语境级错误，但耗时长，一般只对要发布的讲义跑。
+| `notes.tex` / `notes.pdf` | 完整 LaTeX 源码与两遍 `xelatex` 编译生成的 PDF |
+| `figures/` · `figure_manifest.tsv` · `figure_verification.txt` | 裁剪后的配图、时间区间清单与三方校验记录 |
+| `audio.srt`（及 `audio_corrected.srt`、`hardsub_ocr.srt`） | 最终使用的字幕轨与修正记录 |
+| `bands.json` · `layout.json` · `frame_scores.json` | 叠加层几何、课件分栏位置与候选帧评分 |
+| `lecture_profile.json` · `teaching_atoms.tsv` · `numerical_claims.tsv` | 读者定位、教学原子覆盖表与数值主张核对表 |
+| `verify_notes.txt` | 交付门禁报告（末行为 `OVERALL PASS`） |
 
 ## 课程资料库与在线阅读
 
-[课程站点](https://blog.simona.plus/lecture-to-notes/)收录多门课程的讲义和论文解读：截至 2026-09-16 共 9 门课程、
-69 篇讲义、2247 页，另有 9 篇论文解读，包括 Stanford
-CS336: Language Modeling from Scratch Spring 2026 全 18 讲，
-以及南京大学《生成式软件工程》2026 课程讲义。
+[在线课程库](https://blog.simona.plus/lecture-to-notes/)收录了多门公开课的中文讲义与论文解读（包括 Stanford CS336、南京大学《生成式软件工程》与《操作系统》、CMU 11-768 AI Agents 等）。
 
 <img src="docs/assets/readme/reading.webp" alt="课程资料首页、桌面端网页阅读、手机端网页阅读" width="100%">
 
-<sub>左：按课程分卡片的资料首页，卡片里的短横是讲次刻度；中：桌面端网页阅读，左栏在本讲目录与同课程其他讲次之间切换；右：同一讲在 iPhone 视口下的网页阅读。</sub>
+- **网页正文与原版 PDF 双模式**：通过 `scripts/web_notes.py` 校验的讲义默认打开可重排的网页正文（支持 16–28 px 字号、行宽切换、配图点击放大、点击时间区间跳回原视频对应时刻），工具栏可一键切回打包了本地 PDF.js 的原版 PDF 阅读器（支持中文全文检索、书签与 25%–800% 缩放）。
+- **阅读进度记忆与移动端适配**：阅读位置保存在浏览器本地 `localStorage`；窄屏与手机端自动将目录收纳为抽屉。双格式转换与校验规则详见 [docs/development/web-reading.md](docs/development/web-reading.md)。
+- **贡献讲义 PDF**：欢迎通过 Fork + Pull Request 将课程 PDF 提交至 `content/inbox/`，具体步骤与格式要求见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-### 网页正文与原版 PDF
-
-每讲都能读原版 PDF。其中 8 讲另有一份通过校验的网页正文（南京大学《生成式软件工程》第 1–4 讲、
-CMU 11-768 AI Agents 第 1–4 讲）：打开阅读页默认进网页正文，工具栏一键切回 PDF，
-也可以用 `&format=pdf` 直接指定。
-
-- **网页正文可重排**：字号 16–28 px、行宽在舒适与宽行之间切换，选择记在本机；图片点击放大；
-  图注下方保留视频画面的时间区间，并给出一个跳回原视频该时刻的链接。
-- **PDF 用打包好的 PDF.js**：文本层可选可查找（中文也搜得到）、书签、页码、适宽 / 整页和 25%–800%
-  缩放。PDF.js 版本由 `package.json` 锁定并随站点一起打包，不依赖公共 CDN；PDF 内嵌的 JavaScript 不执行。
-- **接着上次读**：网页正文记阅读块与偏移，PDF 记页码、坐标和缩放，只存在本机 localStorage；
-  隐私模式下读不到就从头开始，不影响阅读。
-- **专注阅读**：一键收起目录和多余的工具栏，网页和 PDF 两种模式都适用。
-
-### 手机阅读
-
-窗口宽度 820 px 以下，左栏目录收进抽屉，点一个章节跳过去后自动收起；同课程的讲次切换换成下拉框；
-560 px 以下工具栏按行重排，字号与行宽控制仍然可用。`npm run test:e2e` 用 iPhone 14 视口的 Chromium
-跑一遍完整阅读流程，桌面 Chromium 与 WebKit 各跑一遍。
-
-### 转换不过关就只发 PDF
-
-网页正文由 `scripts/web_notes.py` 生成：它只解析 TeX，不调用 TeX 引擎，也不执行 shell 命令。源
-`.tex`、对应 PDF 和每张引用图片的 SHA-256 固定在课程 manifest 的 `web_source` 里，章节、图、提示框、
-表格、公式和时间字符串的数量也逐项核对。任何一项对不上，这一讲就只保留 PDF，不会发布半成品网页。
-发布约定和新讲义的审阅流程见 [docs/development/web-reading.md](docs/development/web-reading.md)。
-
-## 贡献 PDF
-
-普通贡献者不能直接修改本仓库的 `main` 分支。他们需要先 Fork 仓库，在自己的
-Fork 中把 PDF 添加到 `content/inbox/` 并保存 commit，再使用 PDF contribution
-模板向本仓库提交 PR。PR 只是一份合并申请，不会让贡献者获得写入权限。
-
-自动化会从可信基础分支启动隔离容器，验证完整提交差异并解析 PDF；只有维护者
-合并后的内容才会部署。网页步骤、命令行步骤和 PR 字段见
-[CONTRIBUTING.md](CONTRIBUTING.md)。
-
-外部投稿的安全容量边界是：单个 PDF 不超过 25 MiB、每个 PR 不超过 10 个 PDF、
-合计不超过 100 MiB。这只是 PR 扫描范围，不是课程库或维护者发布的开发上限。
-
-## 视频源检测与探测
-
-支持 YouTube、Bilibili，以及 `https://x.com/<user>/status/<id>[/video/<n>]` 和对应的
-Twitter URL。对 X/Twitter 必须保留用户输入的完整 URL，包括可选的 `/video/<n>`。
-
-```bash
-python3 scripts/video_source.py detect "<URL>"
-python3 scripts/video_source.py probe "<URL>"
-```
-
-下载到的 X/Twitter 字幕必须先通过 `scripts/check_srt_health.py` 的结构健康检查，
-再在视频时长 10%、50%、90% 三处对照音频和画面做语义抽样；任一检查失败时，改用
-X 音频 → 本地 ASR（中英优先 X ASR，Whisper 回退）→ 现有 SRT 修正流程。
-
-## 依赖
+## 依赖安装
 
 ### macOS
 
 ```bash
 brew install yt-dlp ffmpeg imagemagick poppler
-brew install --cask mactex        # 含 xelatex + CTeX 中文支持
-pip install sherpa-onnx numpy      # 可选：X ASR 中英混合快速转写
-pip install mlx-whisper            # Apple silicon：Whisper GPU 转写，61 分钟音频约 6 分钟
-pip install rapidocr-onnxruntime Pillow numpy   # 烧录字幕 OCR + frame_filter.py
-# 非 Apple silicon 的 mac 用 pip install faster-whisper；openai-whisper 只作最后回退
+brew install --cask mactex                      # 含 xelatex + CTeX 中文支持
+pip install rapidocr-onnxruntime Pillow numpy   # 烧录字幕 OCR + 画面裁剪
+pip install mlx-whisper                         # Apple Silicon GPU 转写（Intel Mac 用 faster-whisper）
+pip install sherpa-onnx                         # 可选：X ASR 中英混合快速本地转写
 ```
 
-### Windows（winget，已实测通过）
+### Windows（winget）
 
 ```powershell
-pip install --user yt-dlp
+pip install --user yt-dlp faster-whisper rapidocr-onnxruntime Pillow numpy sherpa-onnx
 winget install --id Gyan.FFmpeg -e --silent
 winget install --id ImageMagick.ImageMagick -e --silent
-winget install --id MiKTeX.MiKTeX -e --silent      # ~140 MB，首次编译会自动装 ctex
-pip install --user sherpa-onnx numpy               # 可选：X ASR 中英混合快速转写
-pip install --user faster-whisper rapidocr-onnxruntime Pillow numpy
-pip install --user openai-whisper                  # 最后回退；会一起装 torch，~2 GB
+winget install --id MiKTeX.MiKTeX -e --silent   # 命令行调用 xelatex 时可加 -enable-installer 自动装宏包
 ```
 
-> 注意：MiKTeX 默认需要对缺失宏包手动放行；命令行调用 `xelatex` 时加 `-enable-installer` 让它自动下。Whisper 依赖的 ffmpeg 需要在 PATH 中（否则跑 Whisper 时会 `FileNotFoundError`）。
-
-### Linux（Debian / Ubuntu 参考）
+### Linux（Debian / Ubuntu）
 
 ```bash
 sudo apt install yt-dlp ffmpeg imagemagick poppler-utils texlive-xetex texlive-lang-chinese
-pip install sherpa-onnx numpy  # 可选
-pip install faster-whisper rapidocr-onnxruntime Pillow numpy
+pip install faster-whisper rapidocr-onnxruntime Pillow numpy sherpa-onnx
 ```
 
-### 站点与网页阅读（只有维护课程库时需要）
+### 静态站点构建与测试（仅维护课程库时需要）
 
 ```bash
-brew install pandoc node          # Linux 用 apt install pandoc nodejs npm
+brew install pandoc node          # Ubuntu/Debian: sudo apt install pandoc nodejs npm
 pip install beautifulsoup4
-npm ci                            # 按 package-lock.json 装 PDF.js 与 Playwright
+npm ci
 python3 -m scripts.build_site --root . --output _site --generated-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-npm run test:e2e                  # 桌面 Chromium / WebKit + iPhone 14 视口
+npm run test:e2e                  # Playwright 桌面与移动端阅读流程测试
+PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-### 工具一览
-
-| 工具 | 必需 | 用途 |
-|------|:---:|------|
-| `yt-dlp` | ✓ | 视频 / 字幕 / 元数据下载 |
-| `ffmpeg` | ✓ | 帧提取、音频提取、本地 ASR 前置 |
-| `xelatex` | ✓ | LaTeX 编译（含 ctex 宏包） |
-| `magick` | ✓ | Contact sheet、帧处理 |
-| `pdftotext` | ✓ | `verify_notes.py` 的脚注同页检查（poppler） |
-| `sherpa-onnx` + X ASR | △ | 中英混合快速本地转写；模型单独缓存，不进 Git |
-| Whisper 后端 | △ | ASR 回退及其他语言：`transcribe_whisper.py` 自动选 `mlx-whisper`（macOS arm64）→ `faster-whisper` → `openai-whisper` |
-| `rapidocr-onnxruntime` | 有烧录字幕时 | `ocr_hardsubs.py` 读字幕带和叠加层几何 |
-| `Pillow` + `numpy` | ✓ | `frame_filter.py` 裁剪叠加层与拼接分栏、给帧打分 |
-| `python3` | ✓ | 运行 `scripts/` 下所有脚本（CI 在 3.12 / 3.13 上验证） |
-| `pandoc` + `beautifulsoup4` | 构建站点时 | `web_notes.py` 把 `notes.tex` 转成网页正文并核对计数与哈希 |
-| Node.js + `npm ci` | 构建站点时 | 锁定 PDF.js 与 Playwright 版本；PDF.js 随站点打包，不走公共 CDN |
-| `scripts/video_source.py` | ✓ | YouTube / Bilibili / X/Twitter URL 识别与元数据探测 |
-| `scripts/check_srt_health.py` | X/Twitter 字幕 | 检查 SRT 覆盖率、重复率和运行时窗口 |
-| Claude Code CLI | △ | 仅 `llm_correct_srt.py` 需要（复用本地登录态，无需 API key） |
-
-## 测试与 CI
-
-```bash
-PYTHONPATH=. python3 -m unittest discover -s tests -v   # 与 CI 完全相同的命令
-```
-
-`.github/workflows/tests.yml` 在 PR 和 `main` 推送时运行两个门禁 job：`unit`（全部 Python 测试，需要 zsh、numpy、Pillow）和 `template`（在带 CJK 支持的 TeX Live 里编译 `notes-template.tex`，覆盖所有模板宏）。两个慢 job 只在手动触发或每周一定时运行：`synthetic-video` 用 Pillow 渲染一段带烧录字幕、静态导航条和讲者色块的合成视频，真实跑一遍 `ocr_hardsubs.py` 与 `frame_filter.py`；`macos-smoke` 在 Apple silicon runner 上跑全部测试并确认 `transcribe_whisper.py` 选中 mlx 后端。缺少可选依赖（xelatex、ffmpeg、rapidocr、CJK 字体）时对应测试自动跳过，本地不会因此报错。`main` 分支要求 `unit` 和 `template` 通过后才能合并。
-
-从本仓库分支发起的 PR 还会跑 `web-reader`：在隔离容器里构建 PDF 与网页两种格式，再用 Playwright
-过一遍阅读流程（Fork 来的 PR 不跑这一步）。合并到 `main` 后 `pages.yml` 重复这套构建，先用 qpdf
-检查每个已发布 PDF，浏览器测试也通过才部署站点。
-
-版本号写在根目录的 `VERSION` 里，每个版本在 `RELEASE_NOTES.md` 顶部有自己的一节。在 `main` 上推送 `vX.Y.Z` tag 后，`.github/workflows/release.yml` 会核对 tag、`VERSION` 和发布说明是否一致，跑一遍 Python 测试，再创建 [GitHub Release](https://github.com/ysyecust/lecture-to-notes/releases)。版本号规则和发布步骤见 [docs/releasing.md](docs/releasing.md)。
+版本发布流程见 [docs/releasing.md](docs/releasing.md)。
 
 ## 仓库结构
 
@@ -269,95 +138,41 @@ PYTHONPATH=. python3 -m unittest discover -s tests -v   # 与 CI 完全相同的
 
 ```text
 .
-├── README.md / README.en.md
-├── CONTRIBUTING.md             # PDF-only PR 投稿说明
-├── LICENSE
 ├── content/
-│   ├── courses/                # 课程 manifest 与已发布 PDF
-│   ├── inbox/                  # 社区 PDF 投稿入口
-│   └── papers.json             # 论文解读目录
-├── ci/
-│   └── pdf-sandbox.Dockerfile  # PDF 检查与站点构建沙箱
-├── scripts/
-│   ├── video_source.py        # YouTube / Bilibili / X(Twitter) URL 识别与元数据探测
-│   ├── check_srt_health.py    # X/Twitter 字幕结构健康检查
-│   ├── clean_subs.py          # YouTube 自动字幕去重
-│   ├── transcribe_x_asr.py    # 可选 X ASR 中英混合本地转写与 SRT 时间戳
-│   ├── correct_srt.py         # Whisper SRT 词典级修正（数据驱动，快）
-│   ├── llm_correct_srt.py     # Whisper SRT 段级修正（LLM + 多模态，慢但更准）
-│   ├── verify_figures.py      # 图文三方验证（时间戳 × 字幕 × 画面）
-│   ├── transcribe_whisper.py  # Whisper 转写：按平台选 mlx / faster / openai 后端 + 无进度预算
-│   ├── ocr_hardsubs.py        # 烧录字幕 OCR：检测 / 抽取为 SRT / 叠加层几何 / Whisper 纠错词典
-│   ├── frame_filter.py        # 导航条、字幕带、拼接分栏的测量与裁剪；讲者出镜帧打分
-│   ├── extract_claims.py      # 从字幕 / OCR 提取数值主张并核对讲义
-│   ├── verify_notes.py        # 交付前一次性门禁：密度、产物、编译日志、配图与脚注同页
-│   ├── install_skill.sh       # 安装 skill 到 ~/.agents / ~/.claude / ~/.codex
-│   ├── release_notes.py       # 核对 VERSION 与 RELEASE_NOTES.md，提取 Release 正文
-│   ├── prepare_cover.sh       # 封面格式转换（webp/png → jpg）
-│   ├── smart_crop.py          # 课件区域检测（实验性，实际流程中通常直接用全帧）
-│   ├── pdf_inspector.py        # PDF 安全检查、元数据与首图解析
-│   ├── site_catalog.py         # 生成可信课程目录
-│   ├── build_site.py           # 构建静态站点
-│   ├── web_notes.py            # notes.tex → 通过校验的网页正文（哈希与计数核对）
-│   └── whisper_prompts/        # Whisper --initial_prompt 术语表
-├── tests/                      # unittest 套件；synthetic_video.py 生成合成讲座视频
-├── e2e/                        # Playwright 阅读流程测试（桌面 + 手机视口）
-├── package.json                # PDF.js 与 Playwright 的锁定版本
-├── playwright.config.mjs       # 浏览器测试的视口与本地站点服务
-├── docs/
-│   ├── index.html              # 课程资料首页
-│   ├── reader.html             # 目录白名单驱动的阅读页（网页正文 + 原版 PDF）
-│   ├── contribute.html         # PDF 贡献入口
-│   ├── assets/                 # 无框架前端模块与样式；readme/ 下是本文件的插图
-│   ├── development/            # web-reading.md：双格式发布约定与审阅流程
+│   ├── courses/                # 各课程 manifest (course.json)、已发布 PDF 与归档 TeX 源码
+│   ├── inbox/                  # 社区 PDF 投稿目录
+│   └── papers.json             # 论文解读清单
+├── docs/                       # 课程库静态站点前端（index / reader / papers / contribute）
+│   ├── assets/                 # 无框架前端脚本与样式
+│   ├── development/            # 双格式讲义转换与发布约定
 │   └── papers/                 # 已发布的论文解读 HTML
-├── .github/workflows/
-│   ├── tests.yml               # PR 门禁 + 每周慢测
-│   ├── pages.yml               # 站点构建与部署
-│   └── contribution-check.yml  # PDF 投稿沙箱检查
-└── skills/
-    ├── lecture-to-notes/
-    │   ├── SKILL.md            # Skill 主定义（适用于 Codex / Claude Code / DeepSeek Harness）
-    │   ├── agents/
-    │   │   └── openai.yaml     # Agent UI 元数据
-    │   ├── references/
-    │   │   └── reader-first-writing.md  # 读者优先写作规则
-    │   └── assets/
-    │       └── notes-template.tex  # LaTeX 模板（含 \vtag \srcnote \degC \um \nm \angstrom）
-    ├── lecture-to-md/          # Markdown 笔记子工作流（本地 ASR）
-    └── paper-to-html/          # 论文 → 自包含 HTML 解读
+├── scripts/
+│   ├── video_source.py         # YouTube / Bilibili / X(Twitter) URL 识别与元数据探测
+│   ├── check_srt_health.py     # 字幕覆盖率、重复率与时间跨度健康检查
+│   ├── clean_subs.py           # YouTube 自动字幕去重
+│   ├── ocr_hardsubs.py         # 烧录字幕检测、OCR 提取、叠加层几何与纠错词表生成
+│   ├── transcribe_x_asr.py     # sherpa-onnx X ASR 中英混合本地转写
+│   ├── transcribe_whisper.py   # Whisper 多后端自动选择（mlx / faster / openai）与超时控制
+│   ├── correct_srt.py          # 基于词典的 SRT 批量修正
+│   ├── llm_correct_srt.py      # 结合抽帧画面的多模态段落级 SRT 修正
+│   ├── frame_filter.py         # 导航条/字幕带裁剪、摄像头+课件分栏切分、讲者帧打分
+│   ├── verify_figures.py       # 配图时间戳 × 字幕 × 画面三方核对
+│   ├── extract_claims.py       # 字幕/OCR 数值提取与讲义核对
+│   ├── verify_notes.py         # 交付门禁（篇幅密度、产物完整性、编译日志、图注同页）
+│   ├── web_notes.py            # notes.tex → 网页正文转换与哈希/计数校验
+│   ├── build_site.py           # 静态站点构建（配合 site_catalog.py 与 pdf_inspector.py）
+│   └── install_skill.sh        # 安装 Skill 到本地 Agent 目录
+├── skills/
+│   ├── lecture-to-notes/       # 核心视频转 LaTeX/PDF 讲义 Skill
+│   ├── lecture-to-md/          # 视频转 Markdown 笔记子工作流
+│   └── paper-to-html/          # 论文转单文件 HTML 解读 Skill
+├── tests/                      # Python 单元测试套件
+└── e2e/                        # Playwright 端到端浏览器测试
 ```
 
 </details>
 
-## 相比现有工具的改进
+## 致谢与许可
 
-| 特性 | [llm-note-generator](https://github.com/Stefan0219/llm-note-generator) | [wdkns-skills](https://github.com/wdkns/wdkns-skills) | **lecture-to-notes** |
-|------|:---:|:---:|:---:|
-| 全自动（无需手动粘贴 prompt） | ✗ | ✓ | ✓ |
-| Bilibili 支持 | ✗ | ✗ | ✓ |
-| X/Twitter 支持 | ✗ | ✗ | ✓ |
-| 字幕回退（烧录字幕 OCR / X ASR / Whisper） | ✗ | ✗ | ✓ |
-| 分P视频处理 | ✗ | ✗ | ✓ |
-| Contact sheet 帧审查 | ✗ | ✓ | ✓ |
-| 时间溯源脚注 | ✗ | ✓ | ✓ |
-| 数值主张逐条核对 | ✗ | ✗ | ✓ |
-| 交付门禁（编译日志 / 脚注同页 / 密度） | ✗ | ✗ | ✓ |
-| 高信息密度 box 系统 | ✓ | ✓ | ✓ |
-
-## 适用场景
-
-- 大学公开课笔记整理（南京大学、MIT OCW、Stanford CS 等）
-- 技术讲座 / 会议 talk 转结构化文档
-- YouTube / Bilibili / X/Twitter 教学视频的知识提取与归档
-
-## 致谢
-
-本项目受以下开源工作启发：
-
-- [Stefan0219/llm-note-generator](https://github.com/Stefan0219/llm-note-generator) — PDF+字幕→prompt 的原始思路
-- [wdkns/wdkns-skills](https://github.com/wdkns/wdkns-skills) — YouTube 视频转 LaTeX 的 Codex skill 设计
-
-## License
-
-GPL-3.0 — 与上游项目保持一致。
+- 感谢 [Stefan0219/llm-note-generator](https://github.com/Stefan0219/llm-note-generator) 与 [wdkns/wdkns-skills](https://github.com/wdkns/wdkns-skills) 提供的早期思路启发。
+- 本项目采用 [GPL-3.0](LICENSE) 许可证。

@@ -57,10 +57,7 @@ class SiteContractTests(unittest.TestCase):
 
     def test_contribution_page_describes_pr_boundary_and_limits(self):
         for fragment in (
-            "普通贡献者不能直接修改这个仓库",
-            "贡献者在这里 commit",
-            "PR 只提交变更和说明，不会获得原仓库写入权限",
-            "维护者决定是否发布",
+            "通过 GitHub Fork 与 Pull Request 提交，维护者审核合并后发布",
             "按这五步提交",
             "≤ 25 MiB",
             "≤ 10 个 PDF",
@@ -74,7 +71,7 @@ class SiteContractTests(unittest.TestCase):
         for fragment in (
             "按课程查找、在线阅读或下载 PDF",
             "按讲次进入讲义，在线阅读或下载 PDF",
-            "普通贡献者不能直接修改这个仓库",
+            "通过 GitHub Fork 与 Pull Request 提交",
         ):
             self.assertIn(fragment, self.index + self.contribute)
         for fragment in (

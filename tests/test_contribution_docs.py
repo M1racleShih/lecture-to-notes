@@ -29,14 +29,12 @@ class ContributionDocsTests(unittest.TestCase):
         guide = (ROOT / "CONTRIBUTING.md").read_text()
         normalized = " ".join(guide.split())
         for fragment in (
-            "普通贡献者不能直接向 `ysyecust/lecture-to-notes` 的 `main` 分支写入文件",
-            "在自己的 Fork 中 commit",
-            "Pull Request 是“请求合并”",
-            "不会自动合并 Pull Request",
-            "base repository：`ysyecust/lecture-to-notes`",
+            "Fork + Pull Request",
+            "维护者审核合并后才会发布",
+            "content/inbox/",
+            "ysyecust/lecture-to-notes",
             "断网、只读、非 root 的容器",
-            "未合并的 Pull Request 不会发布到网站",
-            "不是网站课程数量或仓库总容量的上限",
+            "不是课程库总容量上限",
         ):
             self.assertIn(fragment, normalized)
 

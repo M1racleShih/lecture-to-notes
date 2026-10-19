@@ -16,5 +16,3 @@
 - [ ] 每个 PDF 不超过 25 MiB；本 PR 最多包含 10 个 PDF，合计不超过 100 MiB。
 - [ ] 我填写了可确认的课程信息和原始来源；无法确认的内容已明确说明。
 - [ ] I have the right to share these PDFs for educational use.
-
-> 普通贡献者的 commit 保存在自己的 Fork 中。提交这个 Pull Request 不会获得原仓库写入权限；只有维护者合并后，资料才会进入 `main` 并发布。
