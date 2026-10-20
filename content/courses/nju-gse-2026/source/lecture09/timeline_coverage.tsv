@@ -1,0 +1,23 @@
+start	end	section	content	status
+00:00	04:00	sec:review	意图规格实现鸿沟、本质与偶然复杂性、多Agent锁与OHDSH沙龙	ok
+04:00	08:00	sec:requirements	150行Mini-Agent回顾与南大仙林校区3D地图生成实验	ok
+08:00	12:00	sec:requirements	3D建模细节局限、高铁断网故障与持久恢复本质复杂性	ok
+12:00	16:00	sec:requirements	API指数退避、未知状态幂等性与办公Agent需求爆炸	ok
+16:00	20:00	sec:requirements	WorkBuddy规格说明书约束、被包围的小循环与Grok Bot冲击	ok
+20:00	24:00	sec:requirements	dsh-bot社区复刻与2026年6月10日深夜微内核首提	ok
+24:00	28:00	sec:architecture	架构没有免费午餐、Event Sourcing代价与两端架构板书对比	ok
+28:00	32:00	sec:architecture	过度自由Actor模型批判、LAMP瓶颈与蒸汽机到电机转型	ok
+32:00	36:00	sec:architecture / sec:mapreduce	AI产业超级加速器（QJE 2025）与OSDI 2004 MapReduce论文	ok
+36:00	40:00	sec:mapreduce / sec:world-model	MapReduce结合律板书、热门Key与幂等边界、Spark/Flink及Cordis	ok
+40:00	44:00	sec:world-model	Session=list[Event]世界模型、1494复式记账与投影派生	ok
+44:00	48:00	sec:world-model	Event Bus板书、流式Open Entry与无侵入Token统计插件	ok
+48:00	52:00	sec:bus-api	Trajectory调试视图、followup/inject/steer与pre-step钩子	ok
+52:00	56:00	sec:bus-api / sec:ecosystem	总线协同架构全景与无槽位TUI双端实时同步演示	ok
+56:00	60:00	sec:ecosystem	dsh-better-sidebar集成工作台与Creator Mode热插拔原理	ok
+60:00	64:00	sec:ecosystem	高达驾驶舱监控现场生成与插件冲突、1/1024级联压缩代价	ok
+64:00	68:00	sec:ecosystem / sec:applications	用户创新工具箱理论与大型应用（SuperApp）三步桥接法	ok
+68:00	72:00	sec:applications	dsh-excalidraw五分钟Vibe插件与框选绘制乌龟现场演示	ok
+72:00	76:00	sec:applications	开源办公软件XPS设想与2021年以来科研表格自动填报	ok
+76:00	80:00	sec:applications	1.5KB协议GenUI双向通道、成语接龙与AI五子棋对弈演示	ok
+80:00	84:00	sec:contracts	开启终端Agent对dsh核心与插件源码进行边界审计	ok
+84:00	89:24	sec:contracts	五条核心源码契约、dsh-excalidraw工程取舍与AgentOS展望	ok

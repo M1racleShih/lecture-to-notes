@@ -1,0 +1,11 @@
+{
+  "mode": "technical-slide",
+  "audience": "第一次阅读、具备基本编程与系统开发经验的读者",
+  "central_question": "当真实世界的需求复杂性与快速变化冲垮最小 Agent 循环时，如何用事件溯源与全插件化微内核构建可扩展的 Agent Harness 生态？",
+  "reader_outcome": "理解规矩与自由的架构权衡，掌握 DeepSeek Harness 的 Session 事件溯源、Projection 派生、pre-step 拦截、Scope 隔离与 Slots 装配五条核心契约，并能设计大型应用桥接与 GenUI 双向交互插件。",
+  "visual_teaching_atoms": 33,
+  "formula_teaching_atoms": 1,
+  "vision": "yes",
+  "source_notes": "mlx_whisper 语音转写 + 词表纠错字幕 + 原视频课件、黑板板书与现场代码/应用演示；课堂终端中的源码审计摘要按现场演示整理。",
+  "hardsub_detection_review": "全分辨率与裁剪面板复核确认右侧屏幕面板无硬字幕覆盖；左侧黑板机位含固定教室与上传者水印，已按面板边界独立裁剪。"
+}

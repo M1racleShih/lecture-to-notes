@@ -1,0 +1,34 @@
+figure	frame	start	end	topic	panel
+figures/fig_01_review_se_git.png	frames/frame_002.png	00:00:15	00:00:30	课程回顾：软件工程中意图、规格与实现的鸿沟及项目管理演进	main
+figures/fig_02_review_complexity_agent.png	frames/frame_008.png	00:01:45	00:02:00	课程回顾：本质复杂性、偶然复杂性与Agent-Native外显状态管理	main
+figures/fig_03_board_org_locks.png	frames/frame_013.png	00:03:00	00:03:15	板书：多Agent组织层级与代码库任务读写锁范围	left
+figures/fig_04_ohdsh_meetup.png	frames/frame_015.png	00:03:30	00:03:45	OHDSH首届全国线下聚会与DeepSeek Harness开发者社区沙龙	main
+figures/fig_05_miniagent_code.png	frames/frame_028.png	00:06:45	00:07:00	150行Mini-Agent的Bash工具定义与最小事件循环代码	screen_right
+figures/fig_06_nju_3d_overview.png	frames/frame_032.png	00:07:45	00:08:00	一句话提示词生成的南京大学仙林校区三维场景模型概览	main
+figures/fig_07_nju_3d_detail.png	frames/frame_038.png	00:09:15	00:09:30	基于OpenStreetMap数据生成的校园建筑几何轮廓与绿地细节	main
+figures/fig_08_harness_req_intro.png	frames/frame_045.png	00:11:00	00:11:15	从玩具原型到真实产品：高铁断网暴露的网络中断与恢复痛点	main
+figures/fig_09_api_interruption.png	frames/frame_053.png	00:13:00	00:13:15	API中断后的故障分类、副作用未知状态与幂等重试原则	main
+figures/fig_10_requirements_explosion.png	frames/frame_060.png	00:14:45	00:15:00	围绕Agent的全栈产品需求膨胀：工具、沙箱、上下文与交互	main
+figures/fig_11_office_agent_srs.png	frames/frame_067.png	00:16:30	00:16:45	对标WorkBuddy的《办公Agent产品需求规格说明书》功能与量化指标	main
+figures/fig_12_loop_surrounded.png	frames/frame_071.png	00:17:30	00:17:45	被超时重试、断点恢复、权限沙箱与审计日志包围的最小Agent循环	main
+figures/fig_13_req_change_dsh_bot.png	frames/frame_080.png	00:19:45	00:20:00	需求突变下的架构对比：大厂重型底座重构与社区dsh-bot秒级复刻	main
+figures/fig_14_june10_first_commit.png	frames/frame_092.png	00:22:45	00:23:00	2026年6月10日深夜启动的微内核架构初始提交记录	main
+figures/fig_15_arch_no_free_lunch.png	frames/frame_098.png	00:24:15	00:24:30	架构没有免费的午餐：规矩与自由之间的约束与收益平衡	main
+figures/fig_16_board_arch_spectrum.png	frames/frame_109.png	00:27:00	00:27:15	板书：紧耦合业务模块架构与过度自由Actor消息传递模型的对比	left
+figures/fig_17_arch_assumptions_expire.png	frames/frame_128.png	00:31:45	00:32:00	架构假设的有效期：从蒸汽机集中传动轴到电动机流水线重构	main
+figures/fig_18_ai_super_accelerator.png	frames/frame_133.png	00:33:00	00:33:15	AI作为产业超级加速器：软件开发边际成本塌缩与小团队快速试错	main
+figures/fig_19_mapreduce_paper_fig.png	frames/frame_140.png	00:34:45	00:35:00	OSDI 2004 MapReduce论文中的分片、Map、Shuffle与Reduce执行流程	main
+figures/fig_20_board_mapreduce_tree.png	frames/frame_145.png	00:36:00	00:36:15	板书：Map列表映射与满足结合律的并行树状Reduce归约	left
+figures/fig_21_mapreduce_tradeoff.png	frames/frame_148.png	00:36:45	00:37:00	MapReduce编程模型约束换取的集群容错能力与残留工程细节	main
+figures/fig_22_spark_flink.png	frames/frame_152.png	00:37:45	00:38:00	超越单轮批处理：Spark迭代DAG内存复用与Flink流式水位线状态快照	main
+figures/fig_23_first_principle_plugin.png	frames/frame_160.png	00:39:45	00:40:00	设计Agent Harness的第一性原理：Everything Is a Plugin与协同难题	main
+figures/fig_24_world_model_event_sourcing.png	frames/frame_170.png	00:42:15	00:42:30	Agent Harness的世界模型：基于事件溯源的Session事实流与复式记账类比	main
+figures/fig_25_board_event_bus.png	frames/frame_181.png	00:45:00	00:45:15	板书：Cordis插件围绕Event Bus与持久化历史协同的总线模型	left
+figures/fig_26_dsh_trajectory_ui.png	frames/frame_196.png	00:48:45	00:49:00	DeepSeek Harness将同一Session事件流投影为开发者Trajectory调试视图	main
+figures/fig_27_session_agent_hooks_api.png	frames/frame_208.png	00:51:45	00:52:00	Hooks参与执行决策：已发生事实监听与pre-step洋葱圈拦截机制	main
+figures/fig_28_plugins_on_bus_arch.png	frames/frame_213.png	00:53:00	00:53:15	DeepSeek Harness核心架构全景：插件挂载于事件、投影、Agent与UI插槽总线	main
+figures/fig_29_better_sidebar_creator.png	frames/frame_231.png	00:57:30	00:57:45	社区插件dsh-better-sidebar将会话界面投射为类VS Code多栏工作台	main
+figures/fig_30_plugin_cost_conflicts.png	frames/frame_255.png	01:03:30	01:03:45	插件生态的代价：语义冲突、特征交互与多插件级联压缩失真	main
+figures/fig_31_superapp_excalidraw.png	frames/frame_285.png	01:11:00	01:11:15	大型应用AI增强演示：通过对象锁与桥接层驱动Excalidraw画布绘图的插件	main
+figures/fig_32_genui_gomoku_contracts.png	frames/frame_316.png	01:18:45	01:19:00	GenUI双向交互卡片演示：五子棋盘落子事件回注模型上下文与实时对弈	main
+figures/fig_33_five_contracts_audit.png	frames/frame_349.png	01:27:00	01:27:15	源码走读提炼的DeepSeek Harness五条核心契约与插件边界审视	screen_right

@@ -1,0 +1,35 @@
+atom	status	evidence
+意图、规格、实现的鸿沟与1999火星轨道器公英制事故	ok	notes.tex#sec:review
+本质复杂性、偶然复杂性与Brooks银弹判据	ok	notes.tex#sec:review
+多Agent组织架构与代码库读写/重构锁设计	ok	notes.tex#sec:review
+OHDSH全国线下开发者聚会与许愿式开发	ok	notes.tex#sec:review
+150行Mini-Agent工具定义与60秒超时循环	ok	notes.tex#sec:requirements
+南大仙林校区三维模型生成与OpenStreetMap数据源	ok	notes.tex#sec:requirements
+高铁断网暴露的会话持久化与恢复痛点	ok	notes.tex#sec:requirements
+API中断分类、指数退避与未知副作用幂等重试	ok	notes.tex#sec:requirements
+对标WorkBuddy的办公Agent需求规格与膨胀	ok	notes.tex#sec:requirements
+被真实世界工程约束包围的最小Agent循环	ok	notes.tex#sec:requirements
+Grok Bot需求突变与大厂重型底座对比dsh-bot秒发	ok	notes.tex#sec:requirements
+2026年6月10日微内核架构初始提交与AGENTS.md	ok	notes.tex#sec:requirements
+架构没有免费的午餐：受限与自由的平衡谱系	ok	notes.tex#sec:architecture
+紧耦合业务类架构与无约束Actor消息传递对比	ok	notes.tex#sec:architecture
+架构假设的有效期与蒸汽机到电动机工厂布局重构	ok	notes.tex#sec:architecture
+AI作为产业超级加速器与开发边际成本塌缩	ok	notes.tex#sec:architecture
+MapReduce受限编程模型换取2000台集群容错	ok	notes.tex#sec:mapreduce
+Map列表映射与结合律并行树状Reduce归约	ok	notes.tex#sec:mapreduce
+热门Key数据倾斜与外部副作用幂等性残留细节	ok	notes.tex#sec:mapreduce
+Spark迭代DAG缓存复用与Flink流式水位线状态快照	ok	notes.tex#sec:mapreduce
+Everything Is a Plugin第一性原理与Cordis生命周期	ok	notes.tex#sec:world-model
+Session事件溯源与1494年Pacioli复式记账投影	ok	notes.tex#sec:world-model
+Event Bus共享总线、Open Entry流式状态与UI Slots	ok	notes.tex#sec:world-model
+同一Session投影为Chat对话视图与Trajectory调试视图	ok	notes.tex#sec:bus-api
+Session追加监听与defineProjection增量折叠接口	ok	notes.tex#sec:bus-api
+Agent三种输入模式followup、inject与steer及动态上下文	ok	notes.tex#sec:bus-api
+agent/pre-step洋葱圈拦截与已发生事实的区别	ok	notes.tex#sec:bus-api
+TUI无槽位终端、pdf-reader与dsh-better-sidebar生态	ok	notes.tex#sec:ecosystem
+Creator Mode运行时热插拔插件与权限放开	ok	notes.tex#sec:ecosystem
+插件语义冲突、电话特征交互与10个压缩插件1/1024失真	ok	notes.tex#sec:ecosystem
+von Hippel用户创新工具箱与开源生态留存试错	ok	notes.tex#sec:ecosystem
+大型App AI增强：对象锁、序列化交接与Excalidraw画乌龟	ok	notes.tex#sec:applications
+GenUI双向通道：dsh-dynui卡片事件回注与成语接龙、五子棋	ok	notes.tex#sec:applications
+源码复盘五条核心契约与dsh-excalidraw架构取舍审视	ok	notes.tex#sec:contracts

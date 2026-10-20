@@ -546,6 +546,66 @@
           "figures/fig_35_learning_access.png": "3815ae8d79512534742539e32aaa31f5bcbb3e0caebf0e4a5ee5e489c290dd59"
         }
       }
+    },
+    {
+      "file": "nju_gse_2026_09_deepseek_harness_1_zh.pdf",
+      "title": "第 9 讲：DeepSeek Harness（一）",
+      "order": 9,
+      "expected_pages": 43,
+      "duration_minutes": 89,
+      "instructor": "蒋炎岩",
+      "source_url": "https://www.bilibili.com/video/BV144nc6KEA4/",
+      "source_label": "B站",
+      "meta": "蒋炎岩 · 89min · 43页",
+      "web_source": {
+        "tex": "source/lecture09/notes.tex",
+        "sha256": "135e367e1e87c9583af23d3399a574e15a63ba2dbd3a5cb33d520fa0aa5b13d9",
+        "pdf_sha256": "6c389236caeba7f2fc0d5341c6460473def3167a164520327ea0593ed1cc9c30",
+        "expected": {
+          "chapters": 10,
+          "figures": 33,
+          "images": 33,
+          "callouts": 13,
+          "tables": 5,
+          "math": 48,
+          "time_tokens": 66
+        },
+        "resources": {
+          "figures/fig_01_review_se_git.png": "51c31412413ed0e03b20e016fcc3fe286312edc0282af51639a5642b0524e432",
+          "figures/fig_02_review_complexity_agent.png": "9fbbc79d57cf6e4651067d34e0460d221193fdbd19d8cadb7f850e8700bd1256",
+          "figures/fig_03_board_org_locks.png": "233f6889da28293923236e071f0301f7fe6e3cd19846a1575c0c2fc52588d401",
+          "figures/fig_04_ohdsh_meetup.png": "e1ea70dd277fb93fe13adb5b696e7f6f74d3d3a274c9248399bd063f1ec4e88b",
+          "figures/fig_05_miniagent_code.png": "0ebbb849d4cb705679c7e8a95eb9e6ba0646026b26738fbd14809a46dae49410",
+          "figures/fig_06_nju_3d_overview.png": "983d2b93c173f1f352e9afc6c850caf0f34af693165c9a37e81221a83f0ad81f",
+          "figures/fig_07_nju_3d_detail.png": "7b3fdab4eb52ecce238da5fa98ab294f5be291142adde13896c56d5b8ffab5f2",
+          "figures/fig_08_harness_req_intro.png": "e4ebbf8af866487c22c9329c403ce5a8e5980cab31292d7d3c2c28dae9b596e6",
+          "figures/fig_09_api_interruption.png": "b4d280bea9c409e0480698b9f8ec6d66e1b996fe2c7d41b759dec8ccf236261c",
+          "figures/fig_10_requirements_explosion.png": "51696c816df781fbc4818f95a33ad7d76276e191dabd8004a820c351e349201a",
+          "figures/fig_11_office_agent_srs.png": "537cced1c10ab6e0363a4f3213df977098a217172466c504d123a4c85e9c7264",
+          "figures/fig_12_loop_surrounded.png": "fcfbbd670e87d4ea8f42eacad69313644f960f4ef779904450c6d13d08427720",
+          "figures/fig_13_req_change_dsh_bot.png": "a67bc90816f2a79e7472e7df445e7deb1b2a23db1b31cf216035a77563f0e1f9",
+          "figures/fig_14_june10_first_commit.png": "cbcbfd392656889550943fa20c2be7705a1ea7caa74de9a5f772fb442660d150",
+          "figures/fig_15_arch_no_free_lunch.png": "781e273f1d3a424ccd862432fabde08f87fb7a709e8a8f5ed6af5ded55018eb3",
+          "figures/fig_16_board_arch_spectrum.png": "fd4f1c9c04d7b266a80bd5abbe7c4e17aeec30004e4195084608ba3b4ff370cd",
+          "figures/fig_17_arch_assumptions_expire.png": "6dd478c9647770ba4e85b0d4dc3aea2aa0c7816e3b29b59b7f9a5e301a0f8729",
+          "figures/fig_18_ai_super_accelerator.png": "fec7611eec52ddd6a03367097e26570abf0892a0ac4d92cb53b7a4bd14b1ab3c",
+          "figures/fig_19_mapreduce_paper_fig.png": "2e82d47836ad61577aa0fe210bb46d4d7d4e7ef0884d1fd53cba5a3c1d7ebea6",
+          "figures/fig_20_board_mapreduce_tree.png": "ec5a1f0aac09353b1ba92e359c8fac3381d1dbbcfa5a8d162f98046e851ac629",
+          "figures/fig_21_mapreduce_tradeoff.png": "54e528232af293855d2d701bcccea732b1190cfc1090ff620b123ea76fc4512e",
+          "figures/fig_22_spark_flink.png": "c2088a22ff19b0e20e810155c8e89b5e706eddcf7ad934ec8ca9f62243e8e2df",
+          "figures/fig_23_first_principle_plugin.png": "35c7e0f838f0234bc1bb23ba2885a072e38ce53fcd4a3ee51d8e20082e008f7a",
+          "figures/fig_24_world_model_event_sourcing.png": "7f6889f2148c105e64dfb4a0534e543d0eba6d2ca79da7f99ca725114dd0cd1c",
+          "figures/fig_25_board_event_bus.png": "9bf10bd185abdb80ef7945eb6ce21563a96787fc55e2562ba8c7f4ca423c9720",
+          "figures/fig_26_dsh_trajectory_ui.png": "d7f2cc64638478c01cfb282864df2264a75fa5642e8a6578ba1e366945b2846e",
+          "figures/fig_27_session_agent_hooks_api.png": "29b77e72702be022c71cc02a24d22d82436818022a7bc91eb315fb8174330f74",
+          "figures/fig_28_plugins_on_bus_arch.png": "8a9676e8bb72da3b078537189e9629b65fecdeceeb6c3466bde133ccae1000a0",
+          "figures/fig_29_better_sidebar_creator.png": "b7585deef7204d7b8f0ae243b5c2e432e89bd0edc026e088cd6e2b0f9d080a22",
+          "figures/fig_30_plugin_cost_conflicts.png": "227275378716330f9204e2606b4d2f9fbc0308b0f4bad905ec81d20139ae575b",
+          "figures/fig_31_superapp_excalidraw.png": "3d9bf209db6d89728d48648cf0bf32243a8bd9a78d6f040f6c0ad0aa54e74e78",
+          "figures/fig_32_genui_gomoku_contracts.png": "c4a321576d6b66c2f4ca751d098e2c13e0c7d8ba4f191a88b5d796ccd03a501a",
+          "figures/fig_33_five_contracts_audit.png": "c90e5baaa5f4e7ccad8ff45ea39b9d82afeeb748a1fe4fdd4dfd4a1471fd6214"
+        }
+      }
     }
   ]
 }

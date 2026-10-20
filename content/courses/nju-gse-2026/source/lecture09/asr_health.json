@@ -1,0 +1,14 @@
+{
+  "healthy": true,
+  "entry_count": 2623,
+  "first_timestamp": 0.0,
+  "last_timestamp": 5363.26,
+  "coverage": 0.9999476092380015,
+  "repetition_ratio": 0.16812809759817005,
+  "windows": {
+    "start": true,
+    "middle": true,
+    "end": true
+  },
+  "reasons": []
+}
