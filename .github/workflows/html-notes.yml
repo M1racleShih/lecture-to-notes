@@ -1,0 +1,31 @@
+name: Native HTML notes
+
+on:
+  pull_request:
+    paths:
+      - "skills/lecture-to-notes/**"
+      - "scripts/verify_html_notes.py"
+      - "tests/test_verify_html_notes.py"
+      - "e2e/standalone-notes*"
+      - ".github/workflows/html-notes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        with:
+          persist-credentials: false
+      - name: Validate HTML gate and packaged skill
+        run: |
+          python3 -m unittest tests.test_verify_html_notes tests.test_install_skill tests.test_reader_first_writing tests.test_extract_claims -v
+      - name: Install the pinned browser test runtime
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Verify offline, phone, print, keyboard and reduced-motion behavior
+        run: npx playwright test --config e2e/standalone-notes.config.mjs

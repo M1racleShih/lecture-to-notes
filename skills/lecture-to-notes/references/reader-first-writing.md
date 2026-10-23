@@ -2,7 +2,7 @@
 
 Use this guide after source extraction and before outlining. It adapts reader-first
 writing principles to authored lecture notes. Preserve the lecture's evidence and voice;
-do not make the PDF read like a cleaned transcript or an academic-paper template.
+do not make the lecture read like a cleaned transcript or an academic-paper template.
 
 ## 1. Protect the source before improving the prose
 
@@ -126,8 +126,8 @@ Run these passes after the complete draft exists:
 5. **Sentence flow:** remove oral debris, vague subjects, stacked clauses, mechanical
    contrast, and repeated paragraph templates.
 6. **Evidence:** recheck every number, qualifier, formula, label, and causal statement.
-7. **Rendered reading:** extract text from the compiled PDF, read it continuously, and
-   inspect changed pages at final size.
+7. **Rendered reading:** extract the visible HTML text or compiled PDF text, read it continuously, and
+   inspect the final browser views or pages at reading size.
 
 An automated phrase search can identify candidates; it cannot pass the prose gate. Do not
 rewrite an accurate sentence merely because it is passive, long, metaphorical, or uses a

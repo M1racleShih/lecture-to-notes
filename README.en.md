@@ -2,8 +2,8 @@
 
 # lecture-to-notes
 
-**Turn a YouTube / Bilibili / X (Twitter) lecture video into a compilable Chinese LaTeX PDF and web article.**
-Reader-first structure, every figure footnoted with its source timestamp range, every number traceable to the subtitles or slides.
+**Turn a YouTube / Bilibili / X (Twitter) lecture video into offline Chinese HTML notes; generate LaTeX/PDF when requested.**
+Reader-first structure, every figure marked with its source timestamp range, every number traceable to the subtitles or slides.
 
 [![Release](https://img.shields.io/github/v/release/ysyecust/lecture-to-notes?sort=semver)](https://github.com/ysyecust/lecture-to-notes/releases)
 [![Tests](https://img.shields.io/github/actions/workflow/status/ysyecust/lecture-to-notes/tests.yml?label=tests)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/tests.yml)
@@ -21,7 +21,9 @@ Reader-first structure, every figure footnoted with its source timestamp range, 
 
 ## What it does
 
-Give it a YouTube, Bilibili (including multi-part), or X/Twitter (`https://x.com/<user>/status/<id>[/video/<n>]`) URL and it produces a complete set of Chinese lecture notes: `notes.tex`, compiled `notes.pdf`, cropped figures, a cleaned subtitle track, and verification artifacts (figure manifest, numerical-claim ledger, and delivery-gate report).
+Give it a YouTube, Bilibili (including multi-part), or X/Twitter (`https://x.com/<user>/status/<id>[/video/<n>]`) URL and it produces a complete set of Chinese lecture notes: offline `notes.html`, local figures, a cleaned subtitle track, and verification artifacts (figure manifest, numerical-claim ledger, HTML gate and actual browser review). Optional process animations have pause, reset and manual controls; the complete explanation remains readable without JavaScript. Explicit PDF/LaTeX requests retain the existing `notes.tex` and compiled `notes.pdf` workflow.
+
+See [native HTML lecture guidance](skills/lecture-to-notes/references/html-lectures.md). HTML mode does not require TeX and does not publish to the course-library website.
 
 The repository provides:
 - **Agent skills**: [`lecture-to-notes`](skills/lecture-to-notes/SKILL.md) and [`paper-to-html`](skills/paper-to-html/SKILL.md) for Claude Code, Codex, and DeepSeek Harness
@@ -38,7 +40,9 @@ flowchart LR
     G --> H["frame_filter.py<br/>crop overlays · split slide panels · score"]
     S --> I["Reader-first writing<br/>notes.tex"]
     H --> I
-    I --> J["xelatex ×2"]
+    I -->|PDF requested| J["xelatex ×2"]
+    I -->|HTML default| W["verify_html_notes.py + browser checks"]
+    W -->|PASS| N["notes.html + local assets + audits"]
     J --> K{"verify_notes.py<br/>extract_claims.py"}
     K -->|OVERALL PASS| L["notes.pdf + all artifacts"]
     K -->|FAIL| I
@@ -73,7 +77,8 @@ Trigger in Claude Code or Codex with `/lecture-to-notes <URL>`, or paste a YouTu
 
 | File | Content |
 |---|---|
-| `notes.tex` / `notes.pdf` | Complete LaTeX source and two-pass `xelatex` PDF |
+| `notes.html` · `verify_html_notes.txt` · `browser_verification.txt` | Default HTML, static checks, and actual browser review |
+| `notes.tex` / `notes.pdf` (on request) | Complete LaTeX source and two-pass `xelatex` PDF |
 | `figures/` · `figure_manifest.tsv` · `figure_verification.txt` | Cropped figures, source intervals, and three-way verification output |
 | `audio.srt` (plus `audio_corrected.srt`, `hardsub_ocr.srt`) | Final subtitle track and correction history |
 | `bands.json` · `layout.json` · `frame_scores.json` | Overlay geometry, composite panel layout, and frame scores |

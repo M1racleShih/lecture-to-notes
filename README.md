@@ -2,8 +2,8 @@
 
 # lecture-to-notes
 
-**把 YouTube / Bilibili / X(Twitter) 的讲座视频，变成可编译的中文 LaTeX 讲义 PDF 与在线网页。**
-按读者问题重构章节，每张配图带原视频时间脚注，每个数值可追溯到字幕或画面。
+**把 YouTube / Bilibili / X(Twitter) 的讲座视频，变成可离线阅读的中文 HTML 讲义；需要时再生成 LaTeX / PDF。**
+按读者问题重构章节，每张配图带原视频时间标记，每个数值可追溯到字幕或画面。
 
 [![Release](https://img.shields.io/github/v/release/ysyecust/lecture-to-notes?sort=semver)](https://github.com/ysyecust/lecture-to-notes/releases)
 [![Tests](https://img.shields.io/github/actions/workflow/status/ysyecust/lecture-to-notes/tests.yml?label=tests)](https://github.com/ysyecust/lecture-to-notes/actions/workflows/tests.yml)
@@ -21,7 +21,9 @@
 
 ## 它做什么
 
-输入一个 YouTube、Bilibili（含分 P）或 X/Twitter（`https://x.com/<user>/status/<id>[/video/<n>]`）视频链接，自动产出一套完整的中文讲义：`notes.tex`、编译好的 `notes.pdf`、裁剪好的配图、修正后的字幕轨，以及配图清单、数值核对表与交付门禁报告。
+输入一个 YouTube、Bilibili（含分 P）或 X/Twitter（`https://x.com/<user>/status/<id>[/video/<n>]`）视频链接，默认产出可离线打开的 `notes.html`、本地配图、修正后的字幕轨，以及配图清单、数值核对表与 HTML 校验报告。按教学需要使用可暂停、重置、手动切换的过程动画，正文在关闭 JavaScript 时仍完整可读。明确要求 PDF / LaTeX 时，使用原有 `notes.tex` 与 `notes.pdf` 流程。
+
+HTML 的编写与浏览器验收见 [HTML 讲义规范](skills/lecture-to-notes/references/html-lectures.md)。原生 HTML 讲义不依赖 TeX 工具，也不会自动发布到在线课程库。
 
 仓库同时包含：
 - **Agent Skill**：适用于 Claude Code / Codex / DeepSeek Harness 的 [`lecture-to-notes`](skills/lecture-to-notes/SKILL.md) 与论文解读 [`paper-to-html`](skills/paper-to-html/SKILL.md)
@@ -36,9 +38,11 @@ flowchart LR
     C -->|本地转写| F["transcribe_x_asr.py<br/>transcribe_whisper.py"] --> S
     B --> G["yt-dlp + ffmpeg<br/>视频 · 封面 · 密集抽帧"]
     G --> H["frame_filter.py<br/>裁字幕带/导航条 · 切分课件栏 · 帧打分"]
-    S --> I["读者优先写作<br/>notes.tex"]
+    S --> I["读者优先写作<br/>notes.html / notes.tex"]
     H --> I
-    I --> J["xelatex ×2"]
+    I -->|PDF 请求| J["xelatex ×2"]
+    I -->|默认 HTML| W["verify_html_notes.py + 浏览器检查"]
+    W -->|PASS| N["notes.html + 本地资源 + 校验记录"]
     J --> K{"verify_notes.py<br/>extract_claims.py"}
     K -->|OVERALL PASS| L["notes.pdf + 全部产物"]
     K -->|FAIL| I
@@ -52,7 +56,7 @@ flowchart LR
 <img src="docs/assets/readme/features.webp" alt="讲义局部：全帧配图与时间脚注、公式与符号表、判断框" width="100%">
 
 - **读者优先写作**：遵循 [`references/reader-first-writing.md`](skills/lecture-to-notes/references/reader-first-writing.md) 规范，按读者问题组织章节，先讲含义再给术语，不照搬口语流水账。
-- **配图时间溯源**：每张图下方附原视频时间区间脚注（如 `00:08:00–00:08:15`），由 `verify_notes.py` 强制保证图与脚注同页。
+- **配图时间溯源**：每张图下方附原视频时间区间脚注（如 `00:08:00–00:08:15`），HTML 将时间区间与原视频链接放在图注内；PDF 由 `verify_notes.py` 保证图与脚注同页。
 - **公式有符号表，数字有出处**：独立公式后紧跟符号说明；讲座中出现的带单位数值由 `extract_claims.py` 记入 `numerical_claims.tsv` 逐条核对。
 - **克制的判断框**：提供「核心概念 / 背景与权衡 / 常见误区」三类提示框，仅在需要从正文独立突出时使用。
 
@@ -73,7 +77,8 @@ scripts/install_skill.sh --all      # 以上三处同时安装
 
 | 文件 | 说明 |
 |---|---|
-| `notes.tex` / `notes.pdf` | 完整 LaTeX 源码与两遍 `xelatex` 编译生成的 PDF |
+| `notes.html` · `verify_html_notes.txt` · `browser_verification.txt` | 默认 HTML 讲义、静态校验与实际浏览器验收记录 |
+| `notes.tex` / `notes.pdf`（按需） | 完整 LaTeX 源码与两遍 `xelatex` 编译生成的 PDF |
 | `figures/` · `figure_manifest.tsv` · `figure_verification.txt` | 裁剪后的配图、时间区间清单与三方校验记录 |
 | `audio.srt`（及 `audio_corrected.srt`、`hardsub_ocr.srt`） | 最终使用的字幕轨与修正记录 |
 | `bands.json` · `layout.json` · `frame_scores.json` | 叠加层几何、课件分栏位置与候选帧评分 |
@@ -91,6 +96,8 @@ scripts/install_skill.sh --all      # 以上三处同时安装
 - **贡献讲义 PDF**：欢迎通过 Fork + Pull Request 将课程 PDF 提交至 `content/inbox/`，具体步骤与格式要求见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 依赖安装
+
+HTML 模式无需 XeLaTeX 和 PDF 文本工具；下方完整环境中的 TeX / Poppler 依赖仅在生成或检查 PDF 时使用。
 
 ### macOS
 
