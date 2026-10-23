@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+:root{color-scheme:light;--ink:#19352c;--muted:#53665e;--accent:#20744f;--paper:#fffdf7;--line:#cbd9cf}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.85 system-ui,"Noto Sans CJK SC",sans-serif}
+header,nav,main,footer{width:min(100% - 2.5rem,860px);margin:auto}
+header{padding:3rem 0 1.5rem;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(1.9rem,5vw,3rem);line-height:1.25}
+h2{font-size:1.55rem;margin:2.8rem 0 1rem;scroll-margin-top:1rem}
+h3{font-size:1.15rem;margin-top:2rem}
+a{color:var(--accent);text-underline-offset:.2em;overflow-wrap:anywhere}
+.meta,footer{color:var(--muted);font-size:.88rem}
+img,svg{max-width:100%;height:auto}
+.cover{display:block;max-height:360px;margin:1.5rem auto;object-fit:contain}
+nav{padding:1rem 0;border-bottom:1px solid var(--line)}
+nav ol{padding-left:1.5rem}
+main{padding-bottom:2rem;min-width:0;overflow-wrap:break-word}
+figure{margin:1.5rem 0;padding:1rem;border:1px solid var(--line);border-radius:.65rem;background:white}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:.7rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:.7rem}
+.table-scroll,pre{max-width:100%;overflow-x:auto}
+pre{padding:1rem;background:#eef3ee;border-radius:.5rem;font-size:.9rem}
+.callout{padding:1rem 1.25rem;border-left:4px solid var(--accent);background:#edf4ec}
+button{font:inherit;font-size:.88rem;min-height:44px;padding:.35rem .8rem;border:1px solid var(--accent);border-radius:.4rem;background:white;color:var(--ink);cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid #c97814;outline-offset:3px}
+[data-controls]{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1rem 0}
+[hidden]{display:none!important}
+[data-stepper]{padding:1rem;border:1px solid var(--line);border-radius:.65rem}
+[data-step]{padding:.55rem;border-left:3px solid transparent;transition:background-color .25s,border-color .25s}
+[data-step][aria-current="step"]{border-left-color:var(--accent);background:#dfeedd}
+output{width:100%;font-size:.85rem;color:var(--muted)}
+footer{padding:1.5rem 0;border-top:1px solid var(--line)}
+@media(max-width:600px){body{font-size:17px}header,nav,main,footer{width:calc(100% - 2rem)}figure{padding:.65rem}th,td{padding:.5rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+ body{background:white;color:black;font-size:11pt;line-height:1.6}
+ header,main,footer{width:auto}
+ header{padding-top:0}nav,[data-controls]{display:none!important}
+ figure,table,[data-step]{break-inside:avoid}
+ [data-step]{background:transparent!important;border-color:transparent!important}
+ a{color:inherit}h2,h3{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<header>
+<p class="meta">视频讲义 · {{ORGANIZED_DATE}}</p>
+<h1>{{TITLE}}</h1>
+<p>{{READER_OUTCOME}}</p>
+<p class="meta">讲者 / UP 主：{{UPLOADER}} · 发布：{{PUBLISHED_DATE}} · 时长：{{DURATION}}</p>
+<p><a href="{{VIDEO_URL}}">原视频与来源</a></p>
+<img class="cover" src="cover.jpg" alt="{{COVER_ALT}}">
+</header>
+<nav aria-label="章节目录"><strong>目录</strong><ol id="toc"><li>各章标题见下方正文。</li></ol></nav>
+<main id="lecture">
+{{CONTENT}}
+</main>
+<footer>依据原视频整理。正文区分讲者观点、已核实材料与讲义补充；关键论点及配图保留来源时间。</footer>
+<script>
+"use strict";
+const toc=document.getElementById("toc");
+const headings=Array.from(document.querySelectorAll("main h2"));
+if(headings.length){
+  toc.replaceChildren();
+  headings.forEach((heading,index)=>{
+    if(!heading.id)heading.id="chapter-"+(index+1);
+    const item=document.createElement("li"),link=document.createElement("a");
+    link.href="#"+heading.id;link.textContent=heading.textContent;
+    item.append(link);toc.append(item);
+  });
+}
+document.querySelectorAll("[data-stepper]").forEach(widget=>{
+  const steps=Array.from(widget.querySelectorAll("[data-step]"));
+  const controls=widget.querySelector("[data-controls]");
+  if(!steps.length||!controls)return;
+  const motion=matchMedia("(prefers-reduced-motion: reduce)");
+  const output=controls.querySelector("output");
+  const buttons=Object.fromEntries(Array.from(controls.querySelectorAll("button[data-action]")).map(b=>[b.dataset.action,b]));
+  let index=0,timer=null;
+  function paint(){
+    widget.dataset.index=String(index);widget.dataset.playing=String(timer!==null);
+    steps.forEach((step,i)=>{if(i===index)step.setAttribute("aria-current","step");else step.removeAttribute("aria-current");});
+    if(output)output.textContent="第 "+(index+1)+" / "+steps.length+" 步"+(motion.matches?"（已减少动态效果，可手动切换）":"");
+    if(buttons.previous)buttons.previous.disabled=index===0;
+    if(buttons.next)buttons.next.disabled=index===steps.length-1;
+    if(buttons.play)buttons.play.disabled=motion.matches||timer!==null||index===steps.length-1;
+    if(buttons.pause)buttons.pause.disabled=timer===null;
+  }
+  function pause(){if(timer!==null)clearInterval(timer);timer=null;paint();}
+  function play(){
+    if(motion.matches||timer!==null||index===steps.length-1)return;
+    timer=setInterval(()=>{index=Math.min(index+1,steps.length-1);if(index===steps.length-1)pause();else paint();},1800);
+    paint();
+  }
+  controls.addEventListener("click",event=>{
+    const button=event.target.closest("button[data-action]");
+    if(!button||button.disabled)return;
+    const action=button.dataset.action;
+    if(action==="play"){play();return;}
+    pause();
+    if(action==="next")index=Math.min(index+1,steps.length-1);
+    if(action==="previous")index=Math.max(index-1,0);
+    if(action==="reset")index=0;
+    paint();
+  });
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)pause();});
+  motion.addEventListener("change",pause);
+  controls.hidden=false;paint();
+});
+</script>
+</body>
+</html>

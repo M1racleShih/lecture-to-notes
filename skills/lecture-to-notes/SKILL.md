@@ -1,11 +1,33 @@
 ---
 name: lecture-to-notes
-description: Use when users provide YouTube, Bilibili, or X/Twitter lecture URLs and want reader-first Chinese LaTeX/PDF notes with source-faithful claims, fluent authored prose, and verified teaching figures, especially requests phrased as lecture notes, 视频转PDF, 课程笔记, 讲义, YouTube笔记, B站笔记, X/Twitter lecture notes, or BV号; do not produce transcript dumps, quota-padded prose, or screenshot galleries.
+description: Use when users provide YouTube, Bilibili, or X/Twitter lecture URLs and want source-faithful Chinese lecture notes, with HTML by default and PDF/LaTeX on request. Covers 视频转讲义、课程笔记、B站笔记 and BV号.
 ---
 
 # Lecture to Notes
 
-Turn a YouTube, Bilibili, or X/Twitter lecture video into a complete, compilable `.tex` note set and a rendered PDF.
+Turn a YouTube, Bilibili, or X/Twitter lecture video into reader-first Chinese lecture notes.
+
+## Output format — choose before checking dependencies
+
+**Default: native HTML.** When the user asks for lecture notes without specifying a
+format, deliver an offline-readable `notes.html` with editable local assets.
+For this mode read [references/html-lectures.md](references/html-lectures.md).
+The content acquisition and figure-verification procedures in Phases 1–2 below are
+shared. The reader contract, source-fit profile, teaching-atom coverage, numerical
+claims, and reader-first prose requirements apply to both formats.
+
+**PDF/LaTeX is opt-in.** Use the existing TeX template, two-pass compilation and PDF
+gate below only when the user asks for PDF, LaTeX, or a print-oriented edition.
+For HTML, use semantic HTML equivalents of the writing rules and the HTML gate;
+do not require XeLaTeX, pdftotext, `notes.tex`, `notes.pdf`, PDF same-page footnotes,
+or a successful `verify_notes.py` run. Do not generate a PDF first just to obtain HTML.
+
+Animations are optional teaching tools: use them for a source-backed process,
+state change, or relationship. Keep the full explanation readable without motion,
+and provide pause, reset and manual stepping when playback is used.
+Publishing a hosted website is a separate action and is not implied by an HTML deliverable.
+
+
 
 ## Dependencies
 
@@ -15,10 +37,10 @@ Check before starting (use `which`). Prompt the user to install any missing tool
 |------|----------|---------|
 | `yt-dlp` | Always | Video/subtitle/metadata download (supports YouTube + Bilibili + X/Twitter). Check `yt-dlp --version`: a build older than ~90 days fails on current Bilibili and YouTube pages |
 | `ffmpeg` | Always | Frame extraction, audio extraction |
-| `xelatex` | Always | LaTeX compilation (TeX Live + CTeX for Chinese) |
+| `xelatex` | PDF only | LaTeX compilation (TeX Live + CTeX for Chinese) |
 | `magick` | Always | Frame montage and contact sheets |
 | `ffprobe` | Always | Duration and frame height (ships with ffmpeg) |
-| `pdftotext` | Always | Rendered-page checks in `verify_notes.py` (poppler) |
+| `pdftotext` | PDF only | Rendered-page checks in `verify_notes.py` (poppler) |
 | `python3` | Always | Installed helper scripts and local ASR support |
 | `sherpa-onnx` + X ASR model | Optional zh/en ASR | Fast local Chinese/English transcription with token timestamps |
 | Whisper backend | ASR fallback / non-zh-en / no-CC | `transcribe_whisper.py` picks `mlx-whisper` (macOS arm64) → `faster-whisper` → `openai-whisper` |
@@ -30,7 +52,7 @@ transcription backend: `pip install mlx-whisper` on Apple silicon, otherwise
 `pip install faster-whisper` (or `openai-whisper` as the slowest fallback).
 `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/smart_crop.py` remains an optional experiment.
 
-### LaTeX package check (do NOT skip — `which xelatex` alone is insufficient)
+### PDF only: LaTeX package check (do NOT skip for PDF)
 
 `which xelatex` passing does **not** mean the required LaTeX packages are installed.
 On minimal TeX installs (e.g. MacTeX Basic, TeX Live `scheme-basic`), the binary exists
@@ -113,10 +135,10 @@ Produce a professional Chinese lecture note from a YouTube, Bilibili, or X/Twitt
   slide text stays readable
 - let a capable first-time reader understand the question, mechanism, evidence, consequence, and boundary without decoding the transcript
 - achieve source-fit information density — every figure, box, formula, and paragraph earns its space
-- be structurally organized with `\section{}` / `\subsection{}`
+- be structurally organized with HTML headings, or `\section{}` / `\subsection{}` for PDF
 - end with a synthesis section combining speaker's conclusions and your own distillation
-- be a complete `.tex` from `\documentclass` to `\end{document}`
-- compile successfully to PDF
+- for HTML: be a complete offline-readable `notes.html` with adjacent local figures
+- for PDF: be a complete `.tex` from `\documentclass` to `\end{document}` and compile successfully
 
 ## Non-negotiable quality bar (Codex / production mode)
 
@@ -143,9 +165,12 @@ image-heavy PDFs with thin prose, or missing intermediate artifacts are automati
 | `lecture_profile.json` | Reader and source-fit profile; required fields are described below |
 | `teaching_atoms.tsv` | Header `atom\tstatus\tevidence` — every teaching atom mapped to the notes |
 | `numerical_claims.tsv` | Generated by `extract_claims.py extract`, filled by `extract_claims.py check --write`; header-only is valid when the lecture contains no numerical claims |
-| `notes.tex` | Complete Chinese lecture notes |
-| `notes.pdf` | Two-pass `xelatex` output |
-| `verify_notes.txt` | Full stdout of `verify_notes.py`, ending in `OVERALL PASS` |
+| `notes.html` | HTML mode: complete Chinese lecture notes with local assets |
+| `verify_html_notes.txt` | HTML mode: full stdout of `verify_html_notes.py`, ending in `OVERALL PASS` |
+| `browser_verification.txt` | HTML mode: actual desktop/mobile, offline, no-JS, reduced-motion, interaction and print checks |
+| `notes.tex` | PDF mode: complete Chinese lecture notes |
+| `notes.pdf` | PDF mode: two-pass `xelatex` output |
+| `verify_notes.txt` | PDF mode: full stdout of `verify_notes.py`, ending in `OVERALL PASS` |
 
 ### Source-fit profile and reader contract (hard)
 
@@ -181,6 +206,10 @@ numeric density gates below are source-fit backstops. They never authorize inven
 equations, low-value talking-head screenshots, repetitive boxes, or synonym padding.
 
 ### Density and structure gates (source-adaptive)
+
+For HTML, apply prose, source-figure, chapter and source-formula requirements with
+semantic HTML equivalents. TeX environment syntax, PDF pagination and presentation
+box counts are PDF-specific; the HTML reference defines its delivery gate.
 
 For a lecture of duration $T$ minutes (from metadata):
 
@@ -811,7 +840,7 @@ writing skill or a network call.
 3. Before outlining, complete `lecture_profile.json` and write one-line answers for the
    central question, reader outcome, and each planned section question.
 
-4. Start from `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/notes-template.tex`. Fill metadata and replace the body block.
+4. For PDF start from `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/notes-template.tex`. For HTML use `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/notes-template.html` and the HTML reference. Fill metadata and replace the body block.
 
 5. **Front page cover**: use the video's original cover image, visually distinct from in-body figures.
 
@@ -857,6 +886,9 @@ writing skill or a network call.
 
 #### Figure Time Provenance
 
+The following same-page footnote syntax is for PDF. In HTML put the verified time
+interval and a source-time link directly in each `figcaption`, following the HTML reference.
+
 Every figure from a video frame must have a same-page footnote with the source time interval:
 
 ```latex
@@ -884,7 +916,9 @@ For concepts that screenshots and prose can't explain clearly, add visualization
 
 Use for: process flows, architecture layouts, scaling-law plots, comparison charts. No decorative graphics.
 
-### Phase 4: Compilation, Reader-First Gate, Density Gate, and Delivery
+### Phase 4 (PDF only): Compilation, Reader-First Gate, Density Gate, and Delivery
+
+For HTML use the delivery and browser checks in [references/html-lectures.md](references/html-lectures.md).
 
 ```bash
 xelatex -interaction=nonstopmode notes.tex && xelatex -interaction=nonstopmode notes.tex
@@ -964,6 +998,9 @@ high density counts do not compensate for transcript-like, repetitive, or inflat
 - [ ] Absolute paths of PDF and workdir listed for the user
 
 ## Assets
+
+- `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/notes-template.html`: native HTML lecture template with optional step playback
+- `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/verify_html_notes.py`: HTML-specific content, source-figure, asset and claim gate
 
 - `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/notes-template.tex`: LaTeX template
 - `/ABSOLUTE/PATH/TO/lecture-to-notes/assets/video_source.py`: YouTube / Bilibili / X/Twitter URL detection and metadata probe
