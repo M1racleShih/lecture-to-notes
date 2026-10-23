@@ -38,7 +38,7 @@ flowchart LR
     C -->|local ASR| F["transcribe_x_asr.py<br/>transcribe_whisper.py"] --> S
     B --> G["yt-dlp + ffmpeg<br/>video · cover · dense frames"]
     G --> H["frame_filter.py<br/>crop overlays · split slide panels · score"]
-    S --> I["Reader-first writing<br/>notes.tex"]
+    S --> I["Reader-first writing<br/>notes.html / notes.tex"]
     H --> I
     I -->|PDF requested| J["xelatex ×2"]
     I -->|HTML default| W["verify_html_notes.py + browser checks"]
@@ -56,7 +56,7 @@ flowchart LR
 <img src="docs/assets/readme/features.webp" alt="Close-ups: display math with symbol list, full-frame figure with time footnote, judgment box" width="100%">
 
 - **Rebuilt teaching flow**: follows [`references/reader-first-writing.md`](skills/lecture-to-notes/references/reader-first-writing.md) — organized around reader questions rather than transcript order, explaining meaning before jargon.
-- **Time-traceable figures**: every figure caption carries its source video interval (e.g. `00:08:00–00:08:15`), guaranteed by `verify_notes.py` to stay on the same page as the figure.
+- **Time-traceable figures**: every figure caption carries its source video interval (e.g. `00:08:00–00:08:15`). HTML links the caption to the video; PDF uses `verify_notes.py` to keep its time footnote on the same page.
 - **Formulas with symbol lists, numbers with sources**: display equations are followed by symbol definitions; every number with a unit is extracted and checked in `numerical_claims.tsv` via `extract_claims.py`.
 - **Three judgment boxes**: core concept, background & trade-offs, and common pitfalls — used only when a takeaway benefits from standing apart from body prose.
 

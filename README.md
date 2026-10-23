@@ -56,7 +56,7 @@ flowchart LR
 <img src="docs/assets/readme/features.webp" alt="讲义局部：全帧配图与时间脚注、公式与符号表、判断框" width="100%">
 
 - **读者优先写作**：遵循 [`references/reader-first-writing.md`](skills/lecture-to-notes/references/reader-first-writing.md) 规范，按读者问题组织章节，先讲含义再给术语，不照搬口语流水账。
-- **配图时间溯源**：每张图下方附原视频时间区间脚注（如 `00:08:00–00:08:15`），HTML 将时间区间与原视频链接放在图注内；PDF 由 `verify_notes.py` 保证图与脚注同页。
+- **配图时间溯源**：每张图标明原视频时间区间（如 `00:08:00–00:08:15`）。HTML 将时间区间与原视频链接放在图注内；PDF 由 `verify_notes.py` 保证图与脚注同页。
 - **公式有符号表，数字有出处**：独立公式后紧跟符号说明；讲座中出现的带单位数值由 `extract_claims.py` 记入 `numerical_claims.tsv` 逐条核对。
 - **克制的判断框**：提供「核心概念 / 背景与权衡 / 常见误区」三类提示框，仅在需要从正文独立突出时使用。
 
