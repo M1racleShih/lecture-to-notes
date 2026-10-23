@@ -5,6 +5,13 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 let directory, fileURL;
+async function blockNetwork(context,browserName){
+  // WebKit's offline emulator also rejects file: loads; block HTTP(S) instead.
+  // See WebLoaderStrategy::scheduleLoad in Playwright's WebKit bootstrap.diff.
+  await context.setOffline(browserName!=='webkit');
+  await context.route(/^https?:\/\//,route=>route.abort('internetdisconnected'));
+}
+test.beforeEach(async({context,browserName})=>blockNetwork(context,browserName));
 test.beforeAll(() => {
   directory=fs.mkdtempSync(path.join(os.tmpdir(), 'standalone-lecture-'));
   let html=fs.readFileSync(new URL('../skills/lecture-to-notes/assets/notes-template.html',import.meta.url),'utf8');
@@ -79,9 +86,10 @@ test('reduced motion preserves manual use without playback',async({page})=>{
   await expect(page.locator('[data-stepper]')).toHaveAttribute('data-playing','false');
 });
 
-test('JavaScript-disabled reading retains all explanations',async({browser},testInfo)=>{
-  const context=await browser.newContext({javaScriptEnabled:false,offline:true,viewport:testInfo.project.use.viewport});
+test('JavaScript-disabled reading retains all explanations',async({browser,browserName},testInfo)=>{
+  const context=await browser.newContext({javaScriptEnabled:false,viewport:testInfo.project.use.viewport});
   try{
+    await blockNetwork(context,browserName);
     const page=await context.newPage();await page.goto(fileURL);
     await expect(page.getByRole('heading',{name:'如何独立复核'})).toBeVisible();
     for(const step of await page.locator('[data-step]').all())await expect(step).toBeVisible();
